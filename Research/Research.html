@@ -1,0 +1,56 @@
+<html>
+<body bgcolor="#FFFFFF">
+
+<b><font face="Arial, Helvetica, sans-serif" size="4"> Current and Recent Research Projects  </b>
+<br><br>
+
+<b><font size="3"> <a href="HomologicalObstructionsMultiArrangements.pdf"> A homological characterization for freeness of multi-arrangements</a> </b>
+<br>
+<p><font size="2">
+In the paper with the above title (click above link for the paper, which is not yet on the arxiv), the methods used in the project "free multiplicities on braid arrangements" below are generalized to arbitrary arrangements.  We construct a cochain complex, which we'll call the derivation complex, whose first cohomology is the module D(A,m) of multi-derivations on the arrangement A and whose higher cohomologies vanish if and only if (A,m) is free.  In the linked file DerivationComplex.m2, this cochain complex is constructed using the command derivationComplex.  The derivation complex is the third (co)chain complex in a short exact sequence with two other cochain complexes.  The middle cochain complex, which we'll call the formality complex, is constructed by the command formalityComplex in the linked file DerivationComplex.m2.  It has cohomologies which vanish if and only if A is k-formal in the sense of Brandt and Terao.  The formality complex surjects naturally onto the derivation complex; the kernel of this map of cochain complexes is another cochain complex, which is constructed with the command kernelDerivationComplex in the linked file DerivationComplex.m2.
+<br><br>
+To use the functions in the file DerivationComplex.m2, copy and paste the text from the file and save it under the name DerivationComplex.m2.  Then load the file in a Macaulay2 session.  The file DerivationComplexExamples.m2 contains examples of how to use the code in DerivationComplex.m2.  It is written to be executed line by line in Macaulay2.  The file DerivationComplexVerify.m2 has the code to verify examples in the paper "A homological characterization for freeness of multi-arrangements."
+<br>
+<br><font size="2"> <a href="DerivationComplex.m2"> DerivationComplex.m2 </a>
+<br><font size="2"> <a href="DerivationComplexExamples.m2"> DerivationComplexExamples.m2 </a>
+<br><font size="2"> <a href="DerivationComplexVerify.m2"> DerivationComplexVerify.m2 </a>
+<br>
+<br>
+<b><font size="3"> Free Multiplicities on Braid and Graphic Arrangements  </b>
+<br>
+<p><font size="2">
+This project is centered on using techniques from spline theory to study freeness of multi-arrangements,
+particularly braid arrangements and their sub-arrangements (known as graphic arrangements).  It has long been
+known that the module of multi-derivations on an arrangement and the module of splines on a polytopal complex
+have a number of similarities.  Moreover, multi-derivations on the braid arrangement co-incide with the module
+of splines on the so-called 'Alfeld split.'  Schenck recently exploited this relationship to prove dimension
+formulas for the space of splines on the Alfeld split, which were conjectured by Sorokina and Foucart.
+<br>
+In the paper <a href="http://arxiv.org/abs/1606.03091/"> Generalized splines and graphic arrangements </a>, we show that multi-derivations on sub-arrangements of the braid arrangement (alsoknown as graphic arrangements) also co-incide with certain spline modules.  The Billera-Schenck-Stillman chain complex for splines then yields new homological obstructions for freeness of graphic multi-arrangements.  
+
+In <a href= "http://arxiv.org/abs/1609.00337/"> Free and non-free multiplicities on the A_3 braid arrangement </a> (joint with Francisco, Mermin, and Schweig) 
+we work out precisely what these obstructions are for the A_3 braid
+arrangement.  Building on previous work of Abe, Nuida, Numata, Wakefield, and Terao, we complete the
+classification of free multiplicities on the A_3 braid arrangement.
+<br>
+In a third paper, <a href="http://arxiv.org/abs/1705.02409/"> Inequalities for free multi-braid arrangements </a>, we partially extend the A_3 classification to
+higher braid arrangements.  On a large cone containing the constant multiplicities, we show that the only free multiplicities
+are those identified by Abe, Nuida, and Numata.  A shortened version of this paper has been submitted to the Proceedings of the Japan Academy, Series A; since details of some tedious computations for Proposition 5.5 were ommitted in this submission, the reader may find more details for that particular computation here: <a href="SignedEliminableDetails.pdf"> Supplemental computations for sigma cycles, mountains, and hills </a>.
+</p>
+
+<br><br>
+<b><font size="3"> Semialgebraic Splines </b>
+<br>
+<p><font size="2">
+Most work on splines is restricted to subdivisions where the edges are lines.  However, some work has been done by 
+RenHong Wang and Peter Stiller in the context of more general partitions,
+where lines are replaced by irreducible algebraic curves.  Recent work of Davydov, Kostin, and Saeed
+in the context of isogeometric analysis suggests that such partitions may be of increasing use in 
+the finite element method.
+<br>
+In the paper <a href="http://arxiv.org/abs/1604.05947/"> Semialgebraic splines </a>, joint with Frank Sottile and Lanyin Sun, the dimension of the space 
+of splines of degree at most d on a subdivision (in the plane) consisting of irreducible curves meeting 
+at the origin is computed.  Frank Sottile has put together a nice array of pictures and code explaining our results, 
+which may be found on his website, 
+<a href="http://www.math.tamu.edu/~sottile/research/stories/SemiAlgebraicSplines/index.html"> here </a>.
+</p>
