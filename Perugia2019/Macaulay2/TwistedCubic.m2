@@ -43,3 +43,7 @@ J=ker psi
 --Notice that J is principal; the unique generator is exactly the equation defining the tangent surface!
 --As a reality check, find the dimension of J (it should be 2):
 dim J
+
+--We have not learned yet how to compute the kernel of a map between rings.
+--Computing kernels of maps like this uses 'elimination theory,' which we will
+--encounter in chapter 3.

@@ -17,7 +17,7 @@ i1 : --In this file we explore the twisted cubic, which is the image of the
 --over the rational numbers since Macaulay2 doesn't work well yet
 --over the real or complex numbers)
 R=QQ[x,y,z]
-                                                       
+                                                  
 o1 = R
 
 o1 : PolynomialRing
@@ -88,7 +88,3 @@ i9 : --Notice that J is principal; the unique generator is exactly the equation 
 dim J
           
 o9 = 2
-
-i10 : --We have not learned yet how to compute the kernel of a map between rings.
---Computing kernels of maps like this uses 'elimination theory,' which we will
---encounter in chapter 3.
