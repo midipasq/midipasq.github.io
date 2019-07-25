@@ -1,0 +1,30 @@
+--In this file we illustrate Chebotarev's Density Theorem
+--Start with the polynomial you'd like to work with
+
+R=ZZ[x];
+f=x^4+5*x^3+x^2-2;
+f=x^4+3*x^2-1;
+f=x^4+3*x^2+1;
+f=x^5+10*x^3-10*x^2+35*x-18;
+f=x^5-3*x-1;
+
+PrimesList := numprimes->(
+    
+    )
+
+tallyFactorizationStatistics:=(f,numprimes)->(
+    cPrime := 1;
+    counter := 0;
+    factList := [];
+    while counter<numprimes do(
+	p := nextPrime(cPrime);
+	F := (ZZ/p)[x];
+	f = sub(f,F);
+	T := factor f;
+	ex := apply(#T,i->T#i#1);
+	factList = append(factList,ex);
+	cPrime = p+1;
+	counter = counter+1;
+	);
+    tally factList
+    )
