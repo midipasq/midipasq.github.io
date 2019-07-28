@@ -1,0 +1,55 @@
+--Two ways of implementing echelon forms via Grobner bases
+-------------------------------------------------------------
+-----Method One: Grobner basis for ideals--------------------
+-------------------------------------------------------------
+
+M=matrix{{2,3,4},{3,2,5}}
+--create a polynomial ring with a variable for each column:
+S=QQ[a,b,c]
+--create column vector of variables, multiply by M, take the ideal
+V=matrix{{a},{b},{c}}
+I=ideal(M*V)
+--find a Grobner basis for the ideal
+G=gens gb I
+--transfer back to a matrix (last generator should be first row,etc.) 
+--The result is 'almost' the row reduced echelon form - it may be 
+--necessary to divide leading entries to get the usual leading ones
+matrix{{5,0,7},{0,5,2}}
+
+-------------------------------------------------------------
+-----Method Two: Grobner basis for modules-------------------
+-------------------------------------------------------------
+M=matrix{{2,3,4},{3,2,5}}
+--this tells Macaulay2 to think of M as its `row space' over the rationals
+H=image ((transpose M)**QQ)
+--Take a grobner basis of the QQ-module H
+G=gens gb H
+transpose G
+--Notice that the result is exactly backwards of the usual Gaussian elimination
+--algorithm: the pivots are produced in the `largest' rows and columns, which are
+--the furthest down and to the right.  To get the usual result, we have to reverse 
+--the entries in each row and column:
+M=matrix{{5,2,3},{4,3,2}}
+H=image ((transpose M)**QQ)
+G=gens gb H
+transpose G
+--and then reverse the entries in each row and column of transpose G again at the end.
+
+
+-------------------------------------------------------------
+----These two methods work well over other fields------------
+-------------------------------------------------------------
+--Try this:
+F=(ZZ/3)[x]/ideal(x^3+2*x^2+1)
+--matrix will have three columns:
+R=F[a,b,c]
+--Tell Macaulay2 to make the matrix over R, not F
+M=matrix(R,{{1, x^2, 1},{0,x,2}})
+V=matrix{{a},{b},{c}}
+M*V
+I=ideal(M*V)
+gens gb I
+--translate back to matrix
+rrefM=matrix{{1,0,x+1},{0,1,x^2-x}}
+
+--See if you can implement the other method

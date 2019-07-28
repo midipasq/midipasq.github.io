@@ -1,0 +1,39 @@
+--Division algorithm from CLO p.65 implemented in Macaulay2
+divisionAlgo=(f,L)->(
+    --get the ring in which polynomials are defined
+    S := ring f;
+    --initialize quotient list and remainder to zero
+    quot := new MutableList from apply(L,i->0);
+    rem := 0;
+    p := f;
+    while p != 0 do(
+	i := 1;
+	divisionoccurred := false;
+	while i<=length(L) and not divisionoccurred do(
+	    if lcm(leadTerm(L_i),leadTerm(p))==leadTerm(p) then(
+		nqt := sub(leadTerm(p)/leadTerm(L_i),S);
+		quot#i = quot#i+nqt;
+		p = p-nqt*L_i;
+		divisionoccurred = true;
+		)else(
+		i = i+1;
+		);
+	    if not divisionoccurred then(
+		rem = rem+leadTerm(p);
+		p = p-leadTerm(p);
+		);
+	    )
+	);
+    (toList quot,rem)	
+    )
+
+
+
+--The function quotientRemainder
+S=QQ[x,y,MonomialOrder=>GRevLex]
+f=matrix{{x^7*y^2+x^3*y^2-y+1}}
+M=matrix{{x*y^2-x,x-y^3}}
+(Q,R)=quotientRemainder(f,M)
+--Check:
+f==M*Q+R
+
