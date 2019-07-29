@@ -5,13 +5,19 @@
 
 M=matrix{{2,3,4},{3,2,5}}
 --create a polynomial ring with a variable for each column:
-S=QQ[a,b,c]
+S=QQ[a,b,c,MonomialOrder=>Lex]--you can choose different term orders here but it will make no difference.
 --create column vector of variables, multiply by M, take the ideal
 V=matrix{{a},{b},{c}}
 I=ideal(M*V)
 --find a Grobner basis for the ideal
-G=gens gb I
---transfer back to a matrix (last generator should be first row,etc.) 
+G= gens gb I
+--notice that if you make the first entry of G the first row of a matrix and
+--the second entry of G the second row of a matrix, then the leading ones
+--are not in the right position.  This is because Macaulay2 orders the entries
+--of G from least to greatest.  We can make G into a list and reverse the order
+--to fix this.
+reverse flatten entries G
+--Now transfer back to a matrix. 
 --The result is 'almost' the row reduced echelon form - it may be 
 --necessary to divide leading entries to get the usual leading ones
 matrix{{5,0,7},{0,5,2}}
