@@ -25,9 +25,11 @@ matrix{{5,0,7},{0,5,2}}
 -------------------------------------------------------------
 -----Method Two: Grobner basis for modules-------------------
 -------------------------------------------------------------
-M=matrix{{2,3,4},{3,2,5}}
---this tells Macaulay2 to think of M as its `row space' over the rationals
-H=image ((transpose M)**QQ)
+--define a matrix over a field (need the QQ at the beginning because
+--otherwise Macaulay2 will define the matrix over the integers).
+M=matrix(QQ,{{2,3,4},{3,2,5}})
+--this tells Macaulay2 to think of M as its `row space' over the field
+H=image(transpose M)
 --Take a grobner basis of the QQ-module H
 G=gens gb H
 transpose G
@@ -35,8 +37,8 @@ transpose G
 --algorithm: the pivots are produced in the `largest' rows and columns, which are
 --the furthest down and to the right.  To get the usual result, we have to reverse 
 --the entries in each row and column:
-M=matrix{{5,2,3},{4,3,2}}
-H=image ((transpose M)**QQ)
+M=matrix(QQ,{{5,2,3},{4,3,2}})
+H=image ((transpose M))
 G=gens gb H
 transpose G
 --and then reverse the entries in each row and column of transpose G again at the end.
@@ -45,8 +47,10 @@ transpose G
 -------------------------------------------------------------
 --These two methods work well over other (strange) fields----
 -------------------------------------------------------------
---Try this example from class:
-F=(ZZ/3)[x]/ideal(x^3+2*x^2+1)
+--A matrix over a finite field and the fraction field of the rationals:
+F=(ZZ/3)[x]/ideal(x^3+x^2+2)
+--define fraction fields of domains with 'frac'
+F=frac(QQ[x,y])
 --matrix will have three columns:
 R=F[a,b,c]
 --Tell Macaulay2 to make the matrix over R, not F
@@ -55,7 +59,8 @@ V=matrix{{a},{b},{c}}
 M*V
 I=ideal(M*V)
 gens gb I
---translate back to matrix
-rrefM=matrix{{1,0,x+1},{0,1,x^2-x}}
+--translate back to matrix.  You should get this:
+matrix{{1,0,x+1},{0,1,-x^2-x}}
 
 --See if you can implement the other method!
+--Tip: a shortcut to define V is 'V=transpose vars R'

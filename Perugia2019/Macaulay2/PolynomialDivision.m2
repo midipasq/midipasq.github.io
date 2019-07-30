@@ -38,10 +38,11 @@ divisionAlgo=(f,L)->(
 --Macaulay2, then execute the following 
 --lines of code.  Change the term order
 --and see what kind of results you get.
-S=QQ[x,y,MonomialOrder=>GLex]
+S=QQ[x,y,MonomialOrder=>GLex]--To switch to lex order use MonomialOrder=>Lex
 f=x^7*y^2+x^3*y^2-y+1
 L={x*y^2-x,x-y^3}
-(q,r)=divisionAlgo(f,L)
+(q,r)=divisionAlgo(f,L)--this assigns the quotient list to the variable q and the remainder to the variable r
+(q,r)=divisionAlgo(f,reverse L)
 --Check:this should evaluate to f
 (sum apply(length q,i->q_i*L_i))+r
 
