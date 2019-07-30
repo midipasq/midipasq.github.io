@@ -56,7 +56,7 @@ L={x*y^2-x,x-y^3}
 
 --The function quotientRemainder actually computes a Grobner basis in the background
 --and uses that to minimize the remainder
-S=QQ[x,y,MonomialOrder=>GRevLex]
+S=QQ[x,y,MonomialOrder=>GLex]
 f=matrix{{x^7*y^2+x^3*y^2-y+1}}
 M=matrix{{x*y^2-x,x-y^3}}
 (Q,R)=quotientRemainder(f,M)
