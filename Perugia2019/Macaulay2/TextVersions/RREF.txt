@@ -1,0 +1,66 @@
+--Two ways of implementing echelon forms via Grobner bases
+-------------------------------------------------------------
+-----Method One: Grobner basis for ideals--------------------
+-------------------------------------------------------------
+
+M=matrix{{2,3,4},{3,2,5}}
+--create a polynomial ring with a variable for each column:
+S=QQ[a,b,c,MonomialOrder=>Lex]--you can choose different term orders here but it will make no difference.
+--create column vector of variables, multiply by M, take the ideal
+V=matrix{{a},{b},{c}}
+I=ideal(M*V)
+--find a Grobner basis for the ideal
+G= gens gb I
+--notice that if you make the first entry of G the first row of a matrix and
+--the second entry of G the second row of a matrix, then the leading ones
+--are not in the right position.  This is because Macaulay2 orders the entries
+--of G from least to greatest.  We can make G into a list and reverse the order
+--to fix this.
+reverse flatten entries G
+--Now transfer back to a matrix. 
+--The result is 'almost' the row reduced echelon form - it may be 
+--necessary to divide leading entries to get the usual leading ones
+matrix{{5,0,7},{0,5,2}}
+
+-------------------------------------------------------------
+-----Method Two: Grobner basis for modules-------------------
+-------------------------------------------------------------
+--define a matrix over a field (need the QQ at the beginning because
+--otherwise Macaulay2 will define the matrix over the integers).
+M=matrix(QQ,{{2,3,4},{3,2,5}})
+--this tells Macaulay2 to think of M as its `row space' over the field
+H=image(transpose M)
+--Take a grobner basis of the QQ-module H
+G=gens gb H
+transpose G
+--Notice that the result is exactly backwards of the usual Gaussian elimination
+--algorithm: the pivots are produced in the `largest' rows and columns, which are
+--the furthest down and to the right.  To get the usual result, we have to reverse 
+--the entries in each row and column:
+M=matrix(QQ,{{5,2,3},{4,3,2}})
+H=image ((transpose M))
+G=gens gb H
+transpose G
+--and then reverse the entries in each row and column of transpose G again at the end.
+
+
+-------------------------------------------------------------
+--These two methods work well over other (strange) fields----
+-------------------------------------------------------------
+--A matrix over a finite field and the fraction field of the rationals:
+F=(ZZ/3)[x]/ideal(x^3+x^2+2)
+--define fraction fields of domains with 'frac'
+F=frac(QQ[x,y])
+--matrix will have three columns:
+R=F[a,b,c]
+--Tell Macaulay2 to make the matrix over R, not F
+M=matrix(R,{{1, x^2, 1},{0,x,2}})
+V=matrix{{a},{b},{c}}
+M*V
+I=ideal(M*V)
+gens gb I
+--translate back to matrix.  You should get this:
+matrix{{1,0,x+1},{0,1,-x^2-x}}
+
+--See if you can implement the other method!
+--Tip: a shortcut to define V is 'V=transpose vars R'
