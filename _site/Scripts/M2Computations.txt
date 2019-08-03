@@ -1,0 +1,99 @@
+Macaulay2, version 1.6
+with packages: ConwayPolynomials, Elimination, IntegralClosure, LLLBases,
+               PrimaryDecomposition, ReesAlgebra, TangentCone
+
+i1 : --Code for some computations of splines over the complex in Example 2.8
+     --in the paper "Associated Primes of Spline Complexes."
+     --In particular, the code verifies Proposition 7.1 for Example 2.8.
+     --To use, enter the code defining the functions SplinesEx(r,s), EulerChar(r,s),
+     --and H2Hilbert(r,s).
+     
+     --Vertices and edges are numbered according to their positions in the lists below
+     --Numbering in Macaulay2 starts from zero, so the index of the first vertex is zero. 
+     --This is the convention used to list the edges
+     --vertices={{1,1},{-1,1},{-1,-1},{1,-1},{2,2},{-2,2},{-2,-2},{2,-2}};
+     --edges={{2,3},{0,3},{0,1},{1,2},{3,7},{0,4},{1,5},{2,6},{6,7},{4,7},{4,5},{5,6}};
+     
+     S=QQ[x,y,z];
+
+i2 : --Function to produce Spline Matrix for Example 2.8 with vanishing of order r on interior edges, s on boundary edges--
+     SplinesEx:=(r,s)->(
+         --Boundary Map--
+         BM=matrix{{1,0,0,0,-1},{1,0,0,-1,0},{1,0,-1,0,0},{1,-1,0,0,0},{0,0,0,1,-1},{0,0,1,-1,0},{0,1,-1,0,0},{0,1,0,0,-1},{0,0,0,0,1},{0,0,0,1,0},{0,0,1,0,0},{0,1,0,0,0}};
+         --Diagonal Portion--
+         SP={r,r,r,r,r,r,r,r,s,s,s,s};
+         Forms={y+z,x-z,y-z,x+z,x+y,x-y,x+y,x-y,y+2*z,x-2*z,y-2*z,x+2*z};
+         DiagList=apply(length Forms,i->(Forms_i)^(SP_i));
+         --Spline Matrix--
+         BM|diagonalMatrix(DiagList)
+         )
+
+o2 = {*Function[stdio:15:17-23:23]*}
+
+o2 : FunctionClosure
+
+i3 : --Matrix whose columns generate S-module of splines on Example 2.8--
+     --Each column gives a spline--
+     --Each entry in a column gives the polynomial on the corresponding face--
+     --(gens ker SplinesEx(2,1))^{0,1,2,3,4}
+     
+     --Function which returns the alternating sum of Hilbert polynomials of the modules appearing in the spline complex--
+     EulerChar:=(r,s)->(
+         SP={r,r,r,r,r,r,r,r,s,s,s,s};
+         Forms={y+z,x-z,y-z,x+z,x+y,x-y,x+y,x-y,y+2*z,x-2*z,y-2*z,x+2*z};
+         DiagList=apply(length Forms,i->(Forms_i)^(SP_i));    
+         --Top Module in Spline Complex--
+         RJ3=directSum(apply(5,i->module S));
+         --Second Module in Spline Complex--
+         RJ2=directSum(apply(12,i->coker matrix{{DiagList_i}}));
+         --List whose ith entry is the edges containing vertex i--
+         EVList={{1,2,5},{2,3,6},{0,3,7},{0,1,4},{5,9,10},{6,10,11},{7,8,11},{4,8,9}};
+         --List whose ith entry is S/J(v_i)--
+         M1List=apply(EVList,L->coker gens ideal apply(L,i->DiagList_i));
+         --Third Module in Spline Complex--
+         RJ1=directSum M1List;
+         --Fourth Module in Spline Complex--
+         RJ0=coker gens ideal DiagList;
+         --Module List--
+         SCModules={RJ3,RJ2,RJ1,RJ0};
+         --Euler Characteristic--
+         sum apply(4,i->(-1)^i*hilbertPolynomial(SCModules_i,Projective=>false))
+         )
+
+o3 = {*Function[stdio:32:17-51:69]*}
+
+o3 : FunctionClosure
+
+i4 : --Code to calculate the Hilbert Polynomial of the second homology of the spline complex
+     --The three minimal associated primes are (x,y),(y,z),(x,z) by Example 5.8 of "Associated Primes of Spline Complexes"--
+     H2Hilbert:=(r,s)->(
+         SP={r,r,r,r,r,r,r,r,s,s,s,s};
+         Forms={y+z,x-z,y-z,x+z,x+y,x-y,x+y,x-y,y+2*z,x-2*z,y-2*z,x+2*z};
+         DiagList=apply(length Forms,i->(Forms_i)^(SP_i));
+         --(x,y) portion--
+         H1z=coker gens ideal(DiagList_{4,5,6,7});
+         --(x,z) portion--
+         H1y=coker gens ideal(DiagList_{1,3,9,11});
+         --(y,z) portion--
+         H1x=coker gens ideal(DiagList_{0,2,8,10});
+         --HilbertPolynomial of H2 (by Proposition 7.1 of "Associated Primes of Spline Complexes"--
+         HList={H1x,H1y,H1z};
+         sum apply(HList,M->hilbertPolynomial(M,Projective=>false))
+         )
+
+o4 = {*Function[stdio:55:17-67:56]*}
+
+o4 : FunctionClosure
+
+i5 : --Set vanising across interior edges--
+     r=3;
+
+i6 : --Set vanishing across boundary edges
+     --in order for the code above to give the correct answer, you must enter s>0
+     s=1;
+
+i7 : --Check that the sum of the Euler characteristic and the hilbert polynomial of H2
+     --gives the actual hilbert polynomial.
+     toString {EulerChar(r,s)+H2Hilbert(r,s),hilbertPolynomial(ker SplinesEx(r,s),Projective=>false)}
+
+o7 = {(5/2)*i^2-(41/2)*i+44, (5/2)*i^2-(41/2)*i+44}

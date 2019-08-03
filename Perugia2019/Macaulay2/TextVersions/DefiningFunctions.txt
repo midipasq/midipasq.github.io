@@ -1,0 +1,21 @@
+--performing elimination in two ways to get the ideal of the twisted cubic
+--R=QQ[x,y,z,t,MonomialOrder=>{Weights=>{1,1,1,0},Weights=>{1,1,1,1},Weights=>{1,1,0,0},Weights=>{1,0,0,0}}]
+R=QQ[x,y,z,t,MonomialOrder=>Lex]
+I=ideal(x-t,y-t^2,z-t^3)
+gens gb I
+
+--Defining new functions
+--function that squares a list
+f=n->n^2
+
+--function with two inputs
+f=(n,m)->(
+k := m+n;
+k^2
+)
+
+--squaring by applying to a list
+
+--loading a file you've made
+--any line starting with "--" will be ignored by Macaulay2
+
