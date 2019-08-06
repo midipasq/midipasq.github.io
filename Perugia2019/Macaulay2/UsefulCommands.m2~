@@ -1,0 +1,5 @@
+--Useful commands to know in Macaulay2:
+
+--Testing equality
+R=QQ[x,y]
+I=ideal(x^2,y^2)
