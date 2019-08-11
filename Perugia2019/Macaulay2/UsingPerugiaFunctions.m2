@@ -57,3 +57,27 @@ f2=x*y-1;
 L={f1,f2};
 buchbergerAlgorithm(L)--notice this is highly redundant
 flatten entries gens gb ideal L--compare to this output
+
+--Using couplerCurve
+R=QQ[x,y]
+a=5; 
+r1=1; 
+r2=2;
+r3=4;
+r4=5;
+r5=4;
+couplerCurve(a,r1,r2,r3,r4,r5,R)
+
+--Using tringImplicitization
+R=QQ[x,y]
+n=1;
+d=2;
+f=trigImplicitization(n,d,R)
+
+--Using getRealPlanarSingularPointsNAG
+R=QQ[x,y]
+n=1;
+d=2;
+f=trigImplicitization(n,d,R)
+I=ideal(x,y)--we know the origin is a highly singular point
+getRealPlanarSingularPointsNAG(f,I)
