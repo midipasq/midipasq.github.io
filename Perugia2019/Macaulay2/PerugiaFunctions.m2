@@ -1,7 +1,7 @@
 ---Building some helpful functions
 
 --Row reduced echelon form function
---Input: a matrix defined over a finite field or rational function field
+--Input: a matrix defined over any field
 --Output: the row reduced echelon form
 rref = M->(
     F := ring(M);
@@ -12,21 +12,7 @@ rref = M->(
     G := reverse flatten entries gens gb I;
     G = apply(G,g->(
 	    c := (last(coefficients g))_(0,0);
-	    sub(1/c,F)*g));
-    T := gens R;
-    matrix apply(G,g->apply(T,t->coefficient(t,g)))
-    )
-
---Row reduced echelon form function
---Input: a matrix defined over *any* field
---Output: the row reduced echelon form (without leading ones)
-rrefNoLeadingOnes = M->(
-    F := ring(M);
-    R := F[vars(0..(numcols M)-1)];
-    V := transpose vars R;
-    N := sub(M,R);
-    I := ideal(N*V);
-    G := reverse flatten entries gens gb I;
+	    1/sub(c,F)*g));
     T := gens R;
     matrix apply(G,g->apply(T,t->coefficient(t,g)))
     )
@@ -96,7 +82,7 @@ sPolynomial=(f,g)->(
 --Output: a Grobner basis with respect to the monomial order
 --Comment: Macaulay2 has a 'gb' command which is much more efficient than the following code.  What you find below is the most naive implementation!
 --There is at least one glaring redundancy - see if you can spot it and make the code better.  Or write your own!
-buchbergerAlgorithm:=L->(
+buchbergerAlgorithm=L->(
     GB := L;
     stop := false;
     while not stop do(
