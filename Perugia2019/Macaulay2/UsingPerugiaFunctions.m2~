@@ -1,0 +1,8 @@
+--Here's a short explanation about using the functions in the file "PerugiaFunctions.txt"
+
+--First, download the file and save it somewhere.
+--I've saved the file at ~\Desktop\PerugiaFunctions.txt
+--The following command loads the file.
+load "~\Desktop\PerugiaFunctions.txt"
+
+

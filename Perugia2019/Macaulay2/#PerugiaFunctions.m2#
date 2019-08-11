@@ -1,7 +1,7 @@
 ---Building some helpful functions
 
 --Row reduced echelon form function
---Input: a matrix defined over *any* field
+--Input: a matrix defined over a finite field or rational function field
 --Output: the row reduced echelon form
 rref = M->(
     F := ring(M);
@@ -17,9 +17,24 @@ rref = M->(
     matrix apply(G,g->apply(T,t->coefficient(t,g)))
     )
 
+--Row reduced echelon form function
+--Input: a matrix defined over *any* field
+--Output: the row reduced echelon form (without leading ones)
+rrefNoLeadingOnes = M->(
+    F := ring(M);
+    R := F[vars(0..(numcols M)-1)];
+    V := transpose vars R;
+    N := sub(M,R);
+    I := ideal(N*V);
+    G := reverse flatten entries gens gb I;
+    T := gens R;
+    matrix apply(G,g->apply(T,t->coefficient(t,g)))
+    )
+
 --Multiplication matrix for a ring element
 --Input: a polynomial f and an ideal I (zero-dimensional!)
 --Output: the multiplication matrix for f on the quotient S/I (provided I is zero-dimensional)
+--The columns of the matrix represent multiplication of basis elements by f
 multiplicationMatrix = (f,I)->(
     S := ring(I);
     if dim(S/I)>0 then(
