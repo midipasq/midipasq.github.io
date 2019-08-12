@@ -81,3 +81,22 @@ d=2;
 f=trigImplicitization(n,d,R)
 I=ideal(x,y)--we know the origin is a highly singular point
 getRealPlanarSingularPointsNAG(f,I)
+
+--Using getTrigSingularPointsNAG
+n=1;
+d=2;
+filename="~/Desktop/Trig.txt"
+getTrigSingularPointsNAG(n,d,filename)
+
+--Using euclideanDistanceDegree
+S=QQ[x,y]
+f=(x^2+y^2+x)^2-(x^2+y^2);--equation for a cardioid
+L={{-1,0},{2,3},{0,1},{0,2},{3,4}}--list of points to compute distance from
+scan(L,P->print euclideanDistanceDegree(ideal f,P))--some give a value of 2
+R=entries random(QQ^10,QQ^2)
+scan(R,P->print euclideanDistanceDegree(ideal f,P))--probably all give a value of 3
+euclideanDistanceDegree(ideal f,P)
+
+f=trigImplicitization(1,2,S)--trig curve
+scan(R,P->print euclideanDistanceDegree(ideal f,P))--probably all give 6
+scan(L,P->print euclideanDistanceDegree(ideal f,P))--two give 4
