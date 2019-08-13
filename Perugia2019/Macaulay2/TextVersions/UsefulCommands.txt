@@ -101,6 +101,20 @@ J:I --takes the colon J:I
 saturate(J,m1) --computes the saturation J:m1^infinity
 K=m1+m2 --takes the sum of m1 and m2
 
+--Get a monomial basis for the quotient of a zero-dimensional ideal
+S=QQ[x,y]
+I=ideal(x^3*y-x,y^2-5*y*x+6)
+basis(S/I)--gives all monomials outside LT(I) with respect to monomial order
+--Try a different monomial order
+S=QQ[x,y,MonomialOrder=>Lex]
+I=ideal(x^3*y-x,y^2-5*y*x+6)
+basis(S/I)--notice the basis has changed due to the change in monomial order
+
+--Get a monomial basis in a fixed degree for the quotient by any ideal
+S=QQ[x,y,z]
+I=ideal(x^2-y,x^3-z)
+basis(4,S/I)--gives monomials of degree 4 outside of LT(I) with respect to monomial order
+
 --Output a string to a file.  (It can be useful to output strings to files so that they are formatted nicely for copying and pasting).
 R=QQ[x,y,z]
 p=x^2+y^2+z^2

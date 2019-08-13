@@ -40,6 +40,11 @@ transpose M
 --get the list of rows of M
 entries M
 
+--Make a matrix into a list
+M=matrix({{3,4,5},{6,5,2}})
+E=entries M --returns the list {{3,4,5},{6,5,2}}
+flatten E --returns the list {3,4,5,6,5,2} (this removes one set of inner braces)
+
 --create a function.
 --The inputs are in parentheses.
 --The output is the last line of the function.
@@ -49,6 +54,10 @@ f=(m,n)->(
     )
 --the last line in your function is what is the output.  Take care not to put
 --a semicolon after it!
+
+--Apply a function to a list
+L={0,1,2,3}
+apply(L,i->i^2)--squares every element of the list
 
 --Find a Grobner basis
 R=QQ[x,y,MonomialOrder=>Lex] --Default is GRevLex.  Other standard option is GLex.
@@ -69,12 +78,30 @@ J=ideal(x^2,y^2-x^2)
 K=ideal(x^2,x^2-y)
 I==K
 
---Testing containment
+--Testing containment (using ideals defined above)
 isSubset(I,J)
 isSubset(I,K)
 isSubset(K,I)
 
---(simple) Output to a file.  (It can be useful to output strings to files so that they are formatted nicely for copying and pasting).
+--get the generators of an ideal
+R=QQ[x,y]
+I=ideal(x^2,y^2)
+gens I --returns the matrix matrix {{x^2,y^2}}
+flatten entries gens I --returns the list {x^2,y^2}
+
+--Intersect, quotient, product, sum, and saturate
+R=QQ[x,y]
+m1=ideal(x,y)
+m2=ideal(x-1,y)
+I=intersect(m1,m2) --intersects the ideals m1 and m2
+J=intersect(m1^2,m2^2) --intersects the squares of the ideals m1 and m2
+K=m1*m2 --takes product of the ideals m1 and m2
+J:m1 --takes the colon J:m1
+J:I --takes the colon J:I
+saturate(J,m1) --computes the saturation J:m1^infinity
+K=m1+m2 --takes the sum of m1 and m2
+
+--Output a string to a file.  (It can be useful to output strings to files so that they are formatted nicely for copying and pasting).
 R=QQ[x,y,z]
 p=x^2+y^2+z^2
 "~/Desktop/CouplerEq.txt"<<toString(p)<<close
@@ -84,3 +111,5 @@ p=x^2+y^2+z^2
 --Loading a file you've created.
 --Suppose you've created a file in your local directory called "Perugia.txt"
 load("Perugia.txt")
+
+
