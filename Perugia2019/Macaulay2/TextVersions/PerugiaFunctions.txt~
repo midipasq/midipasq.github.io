@@ -132,6 +132,7 @@ trigImplicitization=(n,d,R)->(
     eul := (a+b*i)^d-(c+i*s)^n;
     I := ideal(r-a,x^2+y^2-r^2,s^2+c^2-1,i^2+1,x-r*c,y-r*s,a^2+b^2-1,eul);
     J := eliminate(I,{r,s,c,a,b,i});
+    use R;
     (sub(J,R))_0
     )
 
@@ -139,6 +140,7 @@ trigImplicitization=(n,d,R)->(
 --This requires that the package NumericalAlgebraicGeometry is loaded
 --Input: two variable polynomial f and an ideal I
 --Output: the singular points of f that are not in V(I) (make I=ideal(0) to find all singular points)
+needsPackage "NumericalAlgebraicGeometry"
 getRealPlanarSingularPointsNAG=(f,I)->(
     R := ring(f);
     G := gens R;
@@ -150,7 +152,6 @@ getRealPlanarSingularPointsNAG=(f,I)->(
     )
 
 --Output the implicit equation and singular points of a trig curve to a text file
---This requires that the package NumericalAlgebraicGeometry is loaded
 --Input: positive integers n,d, and a filename
 --Output: a file located in filename containing the implicit equation of the curve r=cos(n/d*theta)
 --along with the singular locus formatted well for copying and pasting into sage
