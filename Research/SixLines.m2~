@@ -1,0 +1,43 @@
+--The following code defines the function 'cat', which produces the catalecticant matrix of a degree
+--Input: a form f and a degree k.
+--Output: a matrix for the map from S_k to S_(d-k) given by letting polynomials in S_k act by partial differentiation on f
+cat=(f,k)->(
+    S := ring(f);
+    DSk := basis(k,S);
+    d := first degree f;
+    MonsSource := flatten entries DSk;
+    MonsTarget := flatten entries basis(d-k,S);
+    matrix apply(MonsSource,B->flatten entries transpose ((coefficients(diff(B,f),Monomials=>MonsTarget))_1))
+    )
+
+S=QQ[A..J]
+RI=QQ[(symbol A)..(symbol V),(symbol a)..(symbol f)]
+R=ZZ/7[A..J,(symbol a)..(symbol f)]
+RT=frac(QQ[A..J,a..f])[x,y,z];
+--W=(matrix({toList(A..J)})*(transpose basis(3,RT)))_(0,0)
+HA=x*y*z*(x+y+z)*(a*x+b*y+c*z)*(d*x+e*y+f*z)
+CAT=sub(cat(HA,3),RI)
+V=x*y*z*(x+y+z)*(a*x^2+b*y^2+c*z^2+d*x*y+e*x*z+f*y*z)
+Z=ideal(flatten entries sub(last coefficients(diff(W,V)),R))
+IRR=sub(intersect(ideal(a,b,c),ideal(d,e,f)),R)
+saturate(Z,IRR)
+saturate(I,ideal(MINP))
+
+--Force rank 7 or lower by multiplying by rank 3 matrix
+use RI
+M=((id_(RI^3))||matrix({{A,B,C},{D,E,F},{G,H,V},{J,K,L},{M,N,O},{P,Q,R},{S,T,U}}))
+INLIST=matrix({flatten entries(CAT*M)})
+RAN=random(RI^30,RI^25)
+rn=random(RI^30,RI^1)
+
+toString((INLIST*rn)_(0,0))
+
+EQLIST=INLIST*RAN
+--format input for Bertini
+SLIST=toString(flatten entries EQLIST);
+SLIST=replace("[{]","F1=",SLIST);
+SLIST=replace("[}]",";",SLIST);
+--SLIST=replace("[:blank:]","",SLIST);
+SLIST=replace("[,]",";\nF=",SLIST)
+SLIST=replace("[ ]","",SLIST)
+QLIST=replace("[;]","+",QLIST)

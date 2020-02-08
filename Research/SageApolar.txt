@@ -1,0 +1,63 @@
+import numpy
+
+#The following code defines a function which gives the catalecticant matrix
+#Input:
+## F: a form
+## deg: the source degree of the catalecticant
+## vars: a list of the variables in F
+## Fdeg: the degree of F 
+#Output: a matrix for the catalecticant map from S_(deg) to S_(Fdeg-deg), along with the basis used for #S_(deg) and S_(Fdeg-deg)
+def catalecticant(F,deg,vars,Fdeg):
+    K = parent(F.coefficient(vars[0]))
+    n = len(vars)
+    sourceVectors = list(IntegerVectors(deg,n))
+    sourceVarVec = [[[vars[i],v[i]] for i in range(n)] for v in sourceVectors]
+    diffList = []
+    for df in sourceVarVec:
+        diffString = 'diff(F,'
+        for i in range(len(df)):
+            diffString+=str(df[i][0])+','
+            diffString+=str(df[i][1])
+            if i<len(df)-1:
+                diffString+=','
+        diffString+=')'
+        diffList+=[eval(diffString)]
+    targetVectors = list(IntegerVectors(Fdeg-deg,n))
+    targetMons = [numpy.prod([vars[i]^v[i] for i in range(n)]) for v in targetVectors]
+    sourceMons = [numpy.prod([vars[i]^v[i] for i in range(n)]) for v in sourceVectors]
+    return (sourceMons,matrix(K,[[df.coefficient(m) for m in targetMons] for df in diffList]), targetMons)
+
+#The following code defines a function which gives a basis for the apolar ideal in a specified degree
+#Input:
+## F: a form
+## deg: degree in which to compute apolar ideal
+## vars: list of variables
+## Fdeg: degree of the form F
+#Output: 
+#Return a basis for apolar ideal in degree deg as a matrix
+def apolar_ideal(F,deg,vars,Fdeg):
+    M = catalecticant(F,deg,vars,Fdeg)
+    K = kernel(M[1])
+    return((K.matrix())*transpose(matrix([M[0]])))
+
+#We can use the function apolar_ideal to produce the cubics annihilating f3, which is not defined over the #rationals and so produces problems for Macaulay2.
+
+#The six arrangements in Theorem 5.1 with special behavior in degree 6
+#First define the necessary coefficients and their conjugates
+A=exp(2*pi*I/3)
+O=exp(pi*I/3)
+E=1/sqrt(3)*exp(pi*I/6)
+cA=conjugate(A)
+cO=conjugate(O)
+cE=conjugate(E)
+#L (below) is the coefficient list for the last two linear forms in each of f1,...,f6 in Theorem 5.1
+L=[[[1,A,cA],[1,cA,A]],[[1,E,O],[1,cE,cO]],[[1,cO,O],[1,cE,E]],[[1,O,cO],[1,E,cE]],[[1,1,0],[0,1,1]],[[1,0,0],[1,0,0]]]
+#Define variables
+vars=var('x,y,z')
+#PolyList is the list of polynomials f1...f6 in Theorem 5.1
+PolyList=[expand(x*y*z*(x+y+z)*(p[0][0]*x+p[0][1]*y+p[0][2]*z)*(p[1][0]*x+p[1][1]*y+p[1][2]*z)) for p in L]
+
+#the output from the following command needs quite a bit of further simplification to produce the cubics H1,H2,H3,H4 in the #file SixLinesRank.m2
+M=apolar_ideal(PolyList[2],3,vars,6)
+#The following produces alot of simplification to the output from the previous
+[f.maxima_methods().ratsimp() for f in M.list()]

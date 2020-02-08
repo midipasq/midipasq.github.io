@@ -1,0 +1,75 @@
+--Take six examples from Bertini run and verify they have Waring rank 6
+
+--f1 (Half Hessian)
+F=toField(ZZ[t]/ideal(t^2+t+1))
+R=F[x,y,z]
+f1=x*y*z*(x+y+z)*(x+t*y+t^2*z)*(x+t^2*y+t*z)
+S=QQ[x,y,z]
+f1=sub(f1,S)
+I1=inverseSystem f1
+P1=ideal select(I1_*,f->degree f=={3})
+(radical P1)==P1--P1 is a radical ideal
+decompose P1--decomposes into six points, which gives Waring decomposition.
+
+syz gens P1
+
+--2
+S=QQ[x,y,z]
+f2=x*y*z*(x+y+z)*(x^2 + x*y + 1/3*y^2 + x*z + y*z + z^2)
+I2=inverseSystem f2
+P2=ideal select(I2_*,f->(first degree f)<4)
+P2==radical P2
+decompose P2--decomposes into six points, which give Waring decomposition
+
+syz gens P2
+
+--Third
+--E is a root of x^2-x+1/3
+S=QQ[E,x,y,z]
+--f3=x*y*z*(x+y+z)*(x+baro*y+o*z)*(x+barE*y+E*z) o is a root of x^2 - x + 1, baro is its conjugate, barE is conjugate of E
+--minimal polynomial of E
+MP=E^2-E+1/3;
+--Annihilating cubics (produced using sage)
+H1=(-6*E+2)*x*y^2+(6*E-3)*y^3-(6*E-3)*z^3+x^3+2*x*y*z+(6*E-4)*x*z^2+(3*E-3)*y*z^2;
+H2=(3*E-1)*y^3-3*E*x*y^2+x^2*y;
+H3=(-3*E+2)*z^3+(3*E-3)*x*z^2+x^2*z;
+H4=y^2*z+(3*E-2)*y*z^2;
+--Apolar algebra of f5 in degree 3
+I3=ideal(MP,H1,H2,H3,H4)
+
+decompose I3
+
+apply(associatedPrimes I3,P->codim P)
+
+--Different approach for Three
+K=toField(QQ[E]/ideal(E^2-E+1/3))
+S=K[x,y,z]
+H1=(-6*E+2)*x*y^2+(6*E-3)*y^3-(6*E-3)*z^3+x^3+2*x*y*z+(6*E-4)*x*z^2+(3*E-3)*y*z^2;
+H2=(3*E-1)*y^3-3*E*x*y^2+x^2*y;
+H3=(-3*E+2)*z^3+(3*E-3)*x*z^2+x^2*z;
+H4=y^2*z+(3*E-2)*y*z^2;
+I3=ideal(H1,H2,H3,H4)
+
+syz gens I3
+
+--Fourth
+--E is a root of x^2-x+1/3
+S=QQ[E,x,y,z]
+--f4=x*y*z*(x+y+z)*(x+o*y+baro*z)*(x+E*y+barE*z) o is a root of x^2 - x + 1, baro is its conjugate, barE is conjugate of E
+--This is conjugate of the third, so has the same behavior
+
+--5 (A3)
+S=QQ[x,y,z]
+f5=x*y*z*(x+y+z)*(x+y)*(y+z)
+I5=inverseSystem f5
+P5=ideal select(I5_*,f->(first degree f)<4)
+--verify P5 defines a variety
+P5==radical P5
+decompose P5--decomposes into six points, which gives Waring decomposition.
+
+--Sixth
+S=QQ[x,y,z]
+f6=x^3*y*z*(x+y+z)
+I6=inverseSystem f6
+P6=ideal select(I6_*,f->(first degree f)<4)
+--verify

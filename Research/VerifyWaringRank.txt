@@ -1,0 +1,63 @@
+#The six arrangements in Theorem 5.1 with special behavior in degree 6
+#First define the necessary coefficients and their conjugates
+A=exp(2*pi*I/3)
+O=exp(pi*I/3)
+E=1/sqrt(3)*exp(pi*I/6)
+cA=conjugate(A)
+cO=conjugate(O)
+cE=conjugate(E)
+#L (below) is the coefficient list for the last two linear forms in each of f1,...,f6 in Theorem 5.1
+L=[[[1,A,cA],[1,cA,A]],[[1,E,O],[1,cE,cO]],[[1,cO,O],[1,cE,E]],[[1,O,cO],[1,E,cE]],[[1,1,0],[0,1,1]],[[1,0,0],[1,0,0]]]
+
+#Define variables
+vars=var('x,y,z')
+#PolyList is the list of polynomials f1...f6 in Theorem 5.1
+PolyList=[expand(x*y*z*(x+y+z)*(p[0][0]*x+p[0][1]*y+p[0][2]*z)*(p[1][0]*x+p[1][1]*y+p[1][2]*z)) for p in L]
+
+#Waring decompositions of the six products
+#Monomials of degree six
+SixMons=[x^v[0]*y^v[1]*z^v[2] for v in list(IntegerVectors(6,3))]
+
+#f1
+F1=PolyList[0]
+#APoints1 is the list of dual points p1,..,p6 appearing in Table 2
+APoints1=[[A,1,1],[cA,1,1],[1,A,1],[1,cA,1],[1,1,A],[1,1,cA]]
+PWS1=[expand((L[0]*x+L[1]*y+L[2]*z)^6) for L in APoints1]
+G1=F1-sum(expand(vars[i]*PWS1[i]) for i in range(6))
+eqns1=[G1.coefficient(m)==0 for m in SixMons]
+#The following solves for the constants in front of l1,..,l6
+solve(eqns1,C1,C2,C3,C4,C5,C6)
+#The next verifies that the Waring decomposition appearing in Table 2 is correct
+print((F1-(2*A+1)/270*(-PWS1[0]+PWS1[1]-PWS1[2]+PWS1[3]-PWS1[4]+PWS1[5])).expand())
+
+#f2
+F2=PolyList[1]
+APoints2=[[1,E,1],[1,cE,1],[0,E,1],[0,cE,1],[1,E,0],[1,cE,0]]
+PWS2=[expand((L[0]*x+L[1]*y+L[2]*z)^6) for L in APoints2]
+G2=F2-sum(expand(vars[i]*PWS2[i]) for i in range(6))
+eqns2=[G2.coefficient(m)==0 for m in SixMons]
+solve(eqns2,C1,C2,C3,C4,C5,C6)
+print((F2-(2*E-1)/10*(-PWS2[0]+PWS2[1]+PWS2[2]-PWS2[3]+PWS2[4]-PWS2[5])).expand())
+
+#f3
+F3=PolyList[2]
+APoints3=[[O,1,O],[1,1,O],[O,1,0],[1,1,0],[1,0,O],[1,0,1]]
+PWS3=[expand((L[0]*x+L[1]*y+L[2]*z)^6) for L in APoints3]
+G3=F3-sum(expand(vars[i]*PWS3[i]) for i in range(6))
+eqns3=[G3.coefficient(m)==0 for m in SixMons]
+solve(eqns3,C1,C2,C3,C4,C5,C6)
+print((F3-(2*O-1)/90*(PWS3[0]-PWS3[1]-PWS3[2]+PWS3[3]+PWS3[4]-PWS3[5])).expand())
+
+#f4
+#conjugate of Third
+
+#f5
+F5=PolyList[4]
+APoints5=[[1+I,2,1-I],[1-I,2,1+I],[1+I,2,1+I],[1-I,2,1-I],[1,0,I],[1,0,-I]]
+PWS5=[expand((L[0]*x+L[1]*y+L[2]*z)^6) for L in APoints5]
+G5=F5-sum(expand(vars[i]*PWS5[i]) for i in range(6))
+eqns5=[G5.coefficient(m)==0 for m in SixMons]
+solve(eqns5,C1,C2,C3,C4,C5,C6)
+print((F5-1/1920*(PWS5[0]+PWS5[1]-PWS5[2]-PWS5[3]-8*I*PWS5[4]+8*I*PWS5[5])).expand())
+
+#f6 -- this has cactus rank 6 but not Waring rank 6
