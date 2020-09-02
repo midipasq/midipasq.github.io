@@ -1,0 +1,273 @@
+/* global variables */
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,700);
+
+/*
+@font-face {
+    font-family: 'davysdingbats';
+    src: url('media/DavysDingbats.ttf');
+}
+*/
+
+@font-face {
+    font-family: 'floralia';
+    src: url('media/Floralia.ttf');
+}
+
+:root{
+  /* Background, container colors. */
+  --bgcol: #EEE;
+  --concol: #FFFFFC;
+  
+  /* Font */
+  --sitefont: "Open Sans",Georgia;
+  --sitefontsize: 11pt;
+  --secheadfsize: 16pt;
+  
+  /* Size/spacing variables. */
+  --conwidth: 800px;
+  --conpad: 10px;
+  
+  /* Variables relating to the top card. */
+  --picwidth: 160px;
+  --pleft: 140px;
+  
+  /* Link colors; static, hover, active. */
+  --link-col-1: rgb(0,0,180);
+  --link-col-2: rgb(100,100,210);
+  --link-col-3: rgb(200,200,255);
+  
+  /* iframe size */
+  --iframew: calc(800px - 10px - 10px );
+  --iframeh: calc(160px + 40px);
+  
+}
+
+/* misc */
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
+}
+
+.padbelow {
+  padding-bottom: 10px;
+}
+
+/* Section higlighters */
+.secbody{
+  padding-left:0px;
+  padding-right:0px;
+  margin-left:8px;
+  margin-right:8px;
+  margin-top:8px;
+  margin-bottom:0px;
+}
+.secheader{
+  /*
+  margin: 0px;
+  padding: 0px;
+  */
+  
+  margin-left: 0px;
+  padding-left: 0px;
+  
+  font-size: 16pt;
+  font-weight: normal;
+  
+  display: block;
+  width: 100%;
+  border-bottom: 1px solid #CCC;
+}
+
+/* a */
+a:link, a:visited{
+  color: rgb(0,0,180);
+  text-decoration: none;
+}
+a:hover{
+  color: rgb(100,100,210);
+  text-decoration: none;
+}
+a:active{
+  color: rgb(200,200,255);
+  text-decoration: none;
+}
+
+/* body */
+body.bgcol{
+  background-color: #EEE;
+}
+body.mfont{
+  /*background-color: #EEE;*/
+  font-family: "Open Sans",Georgia;
+  font-size: 11pt;
+}
+
+/* div */
+div.mycontainer{
+  width: 800px;
+  margin: auto;
+  padding: 10px;
+  
+  min-height: 400px;
+  background-color: #FFFFFC;
+  
+  /*border: 1px solid black;*/
+  
+  box-shadow: 0 5px 8px rgba(0,0,0,0.3);
+  
+}
+
+div.divtopcard{
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 0;
+  padding-top: 0;
+  margin: 0;
+  
+  width: 500px;
+  background-color: #FFFFFC;
+}
+
+div.sec{
+  padding-bottom: 0px;
+  padding-top: 0px;
+  padding-left: 10px;
+  padding-right: 10px;
+  
+  margin-bottom: 20px;
+}
+
+div.lm{
+  text-align: center;
+  font-size: 11px;
+  font-style: italic;
+}
+
+div.vpad10{
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+div.dingbats{
+  font-family: floralia,davysdingbats,courier;
+  font-size: 24px;
+}
+
+/* iframe */
+iframe.topcard{
+  width: 100%;
+  height: 200px; /* I don't know why. It works. */
+/*  height: 100%; */
+/*  position: relative; */
+
+  border:0;
+  margin:0;
+  padding:0;
+  overflow:hidden;
+  
+  background-color: #FFFFFC
+  frameBorder: 0;
+}
+
+/* img */
+img.centered{
+  display: block;
+  margin: 0 auto;
+}
+img.padded{
+  padding: 5px;
+}
+
+/* table, th, tr, td */
+.bcard{
+  width: calc(800px - 10px - 10px); 
+  vertical-align: top;
+  table-layout: fixed;
+  
+  margin: 0px;
+  padding: 0px;
+}
+
+.bcard-name{
+  text-align: left;
+  text-decoration: none;
+  font-weight: normal;
+  font-size: 24px;
+  
+  margin: 0px;
+  padding: 0px;
+}
+
+.bcard-pic{
+  width: 160px;
+  
+  margin: 0px;
+  padding: 0px;
+}
+
+.bcard-text{
+  padding-left: 140px;
+  padding-right: 0px;
+  margin: 0px;
+  
+/*  width: calc(800px - 10px - 10px - 160px - 140px); */
+}
+
+table.bcard-itable{
+  padding:0px;
+  margin:0px;
+  table-layout: fixed;
+  border-collapse: collapse;
+
+  /*margin: auto;*/
+  
+}
+
+table.bcard-itable td{
+
+  margin:0;
+  padding:0;
+  padding-left:2px;
+  padding-right:2px;
+  
+  text-align: center;
+
+}
+
+/* text */
+text.ptitle {
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+/* ul */
+ul.smallbullets {
+  list-style: none;
+  padding-left: 20px;
+}
+ul.smallbullets li:before{
+  content: "\2022";
+}
+
+ul.nobullets {
+  list-style: none;
+  padding-left: 20px;
+}
+
+ul.padbelow10 li{
+  padding-bottom: 10px;
+}
+
+ul.padbelow4 li{
+  padding-bottom: 4px;
+}
+
+/* td */
+td.topcard_links{
+  font-size: 16px;
+}

@@ -1,0 +1,112 @@
+/* Collapsible sections */
+/* Approach taken from https://codepen.io/anon/pen/YVWgqx */
+/* Basic idea is to use a combination of <input> and <label>. */
+/* Drawback is that you need a new tag for each section for them to work independently. */
+
+:root{
+/*
+  --collapse-icon: "\2193"; 
+  --expand-icon: "\2191";   
+*/
+  --expand-icon: "-";
+  --collapse-icon: "+";
+  --icon-fsize: 12pt;
+  --collapse-speed: 0.1s;
+}
+
+
+/* Hide check box */
+input {
+  display: none;
+  visibility: hidden;
+}
+
+/* Pretty labeling */
+
+label {
+/*  
+  display: block;
+  border-bottom: 1px solid #CCC;  
+*/
+  padding: 0.5em;
+}
+
+/* Default icon properties */
+label::before {
+  font-size: 12pt;
+  content: "+"; 
+  vertical-align: text-center;
+  display: inline-block;
+  width: 12pt;
+  height: 12pt;
+  margin-right: 3px;
+}
+
+/* div properties for expandable section 1 */
+#expand1 {
+  height: 0px;
+  overflow: hidden;
+  -webkit-transition: height 0.1s;
+  transition: height 0.1s;
+  margin-top:5px;
+}
+#toggle1:checked ~ #expand1 {
+  height: auto;
+}
+#toggle1:checked ~ label::before {
+  vertical-align: text-center;
+  content: "-";
+}
+
+/* div properties for expandable section 2 */
+#expand2 {
+  height: 0px;
+  overflow: hidden;
+  -webkit-transition: height 0.1s;
+  transition: height 0.1s;
+  margin-top:5px;
+}
+
+#toggle2:checked ~ #expand2 {
+  height: auto;
+}
+
+#toggle2:checked ~ label::before {
+  vertical-align: text-center;
+  content: "-";
+}
+
+/* div properties for expandable section 3 */
+#expand3 {
+  height: 0px;
+  overflow: hidden;
+  -webkit-transition: height 0.1s;
+  transition: height 0.1s;
+  margin-top:5px;
+}
+
+#toggle3:checked ~ #expand3 {
+  height: auto;
+}
+
+#toggle3:checked ~ label::before {
+  vertical-align: text-center;
+  content: "-";
+}
+/* div properties for expandable section 0 */
+#expand0 {
+  height: 0px;
+  overflow: hidden;
+  -webkit-transition: height 0.1s;
+  transition: height 0.1s;
+  margin-top:5px;
+}
+
+#toggle0:checked ~ #expand0 {
+  height: auto;
+}
+
+#toggle0:checked ~ label::before {
+  vertical-align: text-center;
+  content: "-";
+}
