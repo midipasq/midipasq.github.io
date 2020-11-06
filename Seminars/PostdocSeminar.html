@@ -57,11 +57,48 @@ We'll discuss a version of this problem for polynomials.  Given a homogeneous po
       <ul style="list-style: none; padding: 4px 0;">
 	<li style="padding:16px 0;"> <b><u> October 26 </u></b>
         <li> <b>Who:</b> Andreas Gross
-        <li> <b>Title:</b> Coming soon!
-	<li> <b>Abstract:</b> Coming soon!
+        <li> <b>Title:</b> The geometry of metric graphs
+	<li> <b>Abstract:</b> Metric graphs are arguably among the simplest combinatorial and geometric objects. On the other hand, the combinatorics of the space of all metric graphs, the 'moduli space of tropical curves' is quite intricate. In my talk I will discuss the geometric aspects of this moduli space. I will use this problem to motivate the basic concepts in tropical geometry, so this talk will be accessible to all.
+
       </ul>
 
     </div>
+
+<div class="secbody">
+      <ul style="list-style: none; padding: 4px 0;">
+	<li style="padding:16px 0;"> <b><u> October 26 </u></b>
+        <li> <b>Who:</b> Marc Fehling
+        <li> <b>Title:</b> Algorithms for massively parallel generic hp-adaptive finite element methods
+	<li> <b>Abstract:</b> Efficient algorithms for the numerical solution of partial differential
+equations are required to solve problems on an economically viable
+timescale. In general, this is achieved by adapting the resolution of
+the discretization to the investigated problem, as well as exploiting
+hardware specifications. For the latter category, parallelization plays
+a major role for modern multi-core and multi-node architectures,
+especially in the context of high-performance computing.
+
+Using finite element methods, solutions are approximated by discretizing
+the function space of the problem with piecewise polynomials. With
+hp-adaptive methods, the polynomial degrees of these basis functions may
+vary on locally refined meshes.
+
+We present algorithms and data structures required for generic
+hp-adaptive finite element software applicable for both continuous and
+discontinuous Galerkin methods on distributed memory systems. Both
+function space and mesh may be adapted dynamically during the solution
+process.
+
+We briefly outline the non-trivial parts of the implementation within
+the open-source library deal.II, and solve the Laplace problem
+exemplarily on a domain with a reentrant corner which invokes a
+singularity. With this example, we demonstrate the benefits of the
+hp-adaptive methods in terms of error convergence and show that our
+algorithm scales up to 49,152 MPI processes.
+
+      </ul>
+
+    </div>
+
 
   </div>
 
