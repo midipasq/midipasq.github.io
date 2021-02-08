@@ -76,6 +76,10 @@ borelSort=(M,MD)->(
     M = sub(M,S);
     --get the variables of S
     VS := gens(S);
+    --the following if clause is triggered when M has degree 1 (should be un-necessary)
+    --if d==1 then(
+    --return(flatten apply(length VS,i->apply((flatten exponents MD)_i,j->VS_i)))
+    --);
     --get the variable of largest index dividing MD
     lvar := last(select(VS,v->(MD%v==0)));
     --get the exponents of MD
@@ -101,7 +105,11 @@ borelSort=(M,MD)->(
 	    --Next line is Borel Sort of M_up, \mu_up
 	    bsUpper := borelSort(Mup,MDup);
 	    --Next line is Borel sort of M_down, \mu_down
-	    bsLower := borelSort(Mdown,MDdown);
+	    if d == (q+1) then(
+		bsLower := apply(r,i->1)
+		)else(
+		bsLower = borelSort(Mdown,MDdown)
+		);
 	    --Next line updates mu_1,...,mu_k, stored in the list bSort
 	    bSort = apply(k,i->(if i<k-r then lvar^q*bsUpper_i else lvar^(q+1)*bsLower_(i-k+r)))
 	    )else(
