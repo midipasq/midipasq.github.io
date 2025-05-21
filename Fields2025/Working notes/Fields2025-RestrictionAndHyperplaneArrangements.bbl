@@ -1,0 +1,51 @@
+\begin{thebibliography}{1}
+
+\bibitem{Abe-Terao-Wakefield-Euler-2008}
+Takuro Abe, Hiroaki Terao, and Max Wakefield.
+\newblock The {E}uler multiplicity and addition-deletion theorems for
+  multiarrangements.
+\newblock {\em J. Lond. Math. Soc. (2)}, 77(2):335--348, 2008.
+
+\bibitem{AssHom}
+M.~DiPasquale.
+\newblock Associated primes of spline complexes.
+\newblock {\em J. Symbolic Comput.}, 76:158--199, 2016.
+
+\bibitem{Samet-Basis-2024}
+Seher Fi\c~sekci and Samet Sar\i~o\u glan.
+\newblock Basis condition for generalized spline modules.
+\newblock {\em J. Algebraic Combin.}, 59(2):359--369, 2024.
+
+\bibitem{Gilbert-Tymoczko-Viel-2016}
+Simcha Gilbert, Julianna Tymoczko, and Shira Viel.
+\newblock Generalized splines on arbitrary graphs.
+\newblock {\em Pacific J. Math.}, 281(2):333--364, 2016.
+
+\bibitem{Rose-Module-Bases}
+Lauren~L. Rose.
+\newblock Module bases for multivariate splines.
+\newblock {\em J. Approx. Theory}, 86(1):13--20, 1996.
+
+\bibitem{Spect}
+H.~Schenck.
+\newblock A spectral sequence for splines.
+\newblock {\em Adv. in Appl. Math.}, 19(2):183--199, 1997.
+
+\bibitem{Terao-Arrangements-of-hyperplanes-I}
+Hiroaki Terao.
+\newblock Arrangements of hyperplanes and their freeness. {I}.
+\newblock {\em J. Fac. Sci. Univ. Tokyo Sect. IA Math.}, 27(2):293--312, 1980.
+
+\bibitem{Terao-Arrangements-of-hyperplanes-II}
+Hiroaki Terao.
+\newblock Arrangements of hyperplanes and their freeness. {II}. {T}he {C}oxeter
+  equality.
+\newblock {\em J. Fac. Sci. Univ. Tokyo Sect. IA Math.}, 27(2):313--320, 1980.
+
+\bibitem{Ziegler-Multiarrangements-1989}
+G\"unter~M. Ziegler.
+\newblock Multiarrangements of hyperplanes and their freeness.
+\newblock In {\em Singularities ({I}owa {C}ity, {IA}, 1986)}, volume~90 of {\em
+  Contemp. Math.}, pages 345--359. Amer. Math. Soc., Providence, RI, 1989.
+
+\end{thebibliography}
