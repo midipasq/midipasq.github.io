@@ -1,0 +1,23 @@
+\begin{thebibliography}{1}
+
+\bibitem{AssHom}
+M.~DiPasquale.
+\newblock Associated primes of spline complexes.
+\newblock {\em J. Symbolic Comput.}, 76:158--199, 2016.
+
+\bibitem{Spect}
+H.~Schenck.
+\newblock A spectral sequence for splines.
+\newblock {\em Adv. in Appl. Math.}, 19(2):183--199, 1997.
+
+\bibitem{CohVan}
+H.~Schenck and P.~Stiller.
+\newblock Cohomology vanishing and a problem in approximation theory.
+\newblock {\em Manuscripta Math.}, 107(1):43--58, 2002.
+
+\bibitem{LCoho}
+H.~Schenck and M.~Stillman.
+\newblock Local cohomology of bivariate splines.
+\newblock {\em J. Pure Appl. Algebra}, 117/118:535--548, 1997.
+
+\end{thebibliography}
