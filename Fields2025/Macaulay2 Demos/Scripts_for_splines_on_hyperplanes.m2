@@ -24,7 +24,7 @@ zonotopeEdgeLabels = A ->(
     E := {};
     I := {};
     vtxcnt := 0;
-    while vtxcnt<(#V)-1 do(
+    while vtxcnt<(#V) do(
 	nrmcnt := 0;
 	vtx := V_(vtxcnt);
 	while nrmcnt<#normals do(
@@ -50,3 +50,44 @@ assignSmoothness = (A,r,I)->(
     )
     
     
+isThreeGenerated = method()
+isThreeGenerated = A -> (
+    R := ring A;
+    K := coefficientRing(R);
+    M := coefficients A;
+    RELS = ker M;
+    ncM := numcols M;
+    nrM := numrows M;
+    FL2 := apply(flats(2,A),f->toList f);--get codimension two flats, turn into lists
+    FL2trip := select(FL2,f->#f>=3);
+    --If there are no flats of codimension two, then there are no relations of length three.
+    if #FL2trip == 0 then(
+	if (rank RELS)>0 then(
+	    return false
+	    )else(
+	    return true
+	    ));
+    --The next function gets the length three relations as a submodule of all relations
+    LCLRELS := sum apply(FL2trip, f->(
+	    fsz := #f;
+	    idsz := ncM-fsz;
+	    c := 0;
+	    i := 0;
+	    ID := id_(K^(ncM-fsz));
+	    relMat := {};
+	    while i+c<ncM do(
+		if isMember(i+c,f) then(
+		    relMat = append(relMat,join(flatten entries(M_(i+c)),apply(idsz,i->0)));
+		    c = c+1
+		    )else(
+		    relMat = append(relMat,join(apply(nrM,i->0),flatten entries(ID_i)));
+		    i = i+1
+		    )
+		);
+	    ker transpose matrix relMat
+	    ));
+    QUOT := prune(RELS/LCLRELS);
+    if (rank QUOT)>0 then return false else true
+    )
+    
+	    
