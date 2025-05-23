@@ -1,5 +1,3 @@
-{{ page.markdown }}
-
 # Hyperplanes and Zonotopes
 ## Loading packages
 
