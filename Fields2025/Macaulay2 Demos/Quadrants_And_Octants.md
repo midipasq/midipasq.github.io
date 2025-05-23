@@ -1,3 +1,5 @@
+{{ page.markdown }}
+
 # First examples: Splines on quadrants and octants
 ## Setup: Loading the package and generalizedSplines function
 

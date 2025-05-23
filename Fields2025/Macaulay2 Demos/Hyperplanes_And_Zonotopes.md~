@@ -1,0 +1,18 @@
+# Hyperplanes and Zonotopes
+## Loading packages
+
+For this tutorial we'll need to load the Hyperplane Arrangements package.
+
+```
+loadPackage("HyperplaneArrangements",Reload=>true);
+```
+
+This also loads the package "Polyhedra", which we will also need.
+
+## Hyperplane arrangements
+
+A hyperplane arrangement $A\subset\mathbb{R}^n$ is a union
+\[
+A=\bigcup_{i=1}^k H_i
+\]
+where $H_1,\ldots,H_k$ are hyperplanes -- i.e. $H_1,\ldots,H_k$ are each the zero locus of a linear form $\alpha_1,\ldots,\alpha_k$.
