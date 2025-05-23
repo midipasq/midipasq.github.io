@@ -1,14 +1,13 @@
 # Hyperplanes and Zonotopes
 ## Loading packages
 
-For this tutorial we'll need to load both the "HyperplaneArrangements" package and the "AlgebraicSplines" package.
+For this tutorial we'll need to load the Hyperplane Arrangements package.
 
 ```
 loadPackage("HyperplaneArrangements",Reload=>true);
-loadPackage("AlgebraicSplines",Reload=>true);
 ```
 
-The "HyperplaneArrangements" package loads the package "Polyhedra", which we will also need.
+This also loads the package "Polyhedra", which we will also need.
 
 ## Hyperplane arrangements
 
@@ -152,7 +151,11 @@ zonotopeEdgeLabels = A ->(
 
 ## Using the zonotopeEdgeLabels function
 
-Let's recover the splines on the boolean arrangement $xy$ and $xyz$ using the zonotopeEdgeLabels function.
+Let's recover the splines on the boolean arrangement $xy$ and $xyz$ using the zonotopeEdgeLabels function.  Make sure the algebraic splines package is loaded first.
+
+```
+loadPackage("AlgebraicSplines",Reload=>true)
+```
 
 ```
 S=QQ[x,y]
@@ -169,29 +172,4 @@ A2=arrangement{x,y,z}
 Spl2=generalizedSplines(E2,L2)
 ```
 
-## Changing the smoothness distribution
-In our project, we will be changing the smoothness distribution across hyperplanes.  It will be useful to have a short script which goes through the list of edge labels and changes the exponents according to the smoothness distribution on the hyperplanes.  The following function does this.
-
-```
-assignSmoothness = method()
-assignSmoothness = (A,r,I)->(
-    hyps := A#(first keys A);--get the list of hyperplanes
-    smthHash := hashTable apply(length r,i->{hyps_i,r_i});--create a hash table that associates each linear form of the hyperplane to the desired smoothness
-    apply(I,h->h^(smthHash#h+1))--cycle through I, raising each linear form to the appropriate power
-    )
-```
-
-Here it is in operation.
-
-```
-S=QQ[x,y,z]
-A=arrangement {x,y,z}
-(E,L,Z)=zonotopeEdgeLabels(A)
-r={3,4,5}
-I=assignSmoothness(A,r,L)
-```
-Now we can feed $E$ and $I$ into generalizedSplines.
-
-```
-generalizedSplines(E,I)
-```
+## Higher order smoothness

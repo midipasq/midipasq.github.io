@@ -6,11 +6,10 @@ loadPackage("HyperplaneArrangements",Reload=>true)
 
 zonotopeEdgeLabels = method()
 --Inputs: A: a hyperplane arrangement A
---        r: a smoothness distribution on the hyperplanes (a list of integers, one for each hyperplane)
 --Outputs: A sequence (E,I) where
 --        E records the edges between vertices of Z(A)
 --        I records the edge labels using the smoothness distribution r
-zonotopeEdgeLabels = (A,r) ->(
+zonotopeEdgeLabels = A ->(
     S := ring A;--get the ring of A
     hyps := A#(first keys A); --get the list of hyperplanes definining A
     M := coefficients A; --get the coefficient matrix of A
@@ -34,7 +33,7 @@ zonotopeEdgeLabels = (A,r) ->(
 	    p := position(V,v->v==vtxc);
 	    if not p===null then(
 		E = append(E,{vtxcnt,p});
-		I = append(I,hyps_(nrmcnt)^(r_nrmcnt+1));
+		I = append(I,hyps_(nrmcnt));
 		);
 	    nrmcnt=nrmcnt+1;
 	    );
@@ -42,3 +41,12 @@ zonotopeEdgeLabels = (A,r) ->(
 	);
     (E,I,Z)
     )
+
+assignSmoothness = method()
+assignSmoothness = (A,r,I)->(
+    hyps := A#(first keys A);
+    smthHash := hashTable apply(length r,i->{hyps_i,r_i});
+    apply(I,h->h^(smthHash#h+1))
+    )
+    
+    

@@ -1,13 +1,14 @@
 # Hyperplanes and Zonotopes
 ## Loading packages
 
-For this tutorial we'll need to load the Hyperplane Arrangements package.
+For this tutorial we'll need to load both the "HyperplaneArrangements" package and the "AlgebraicSplines" package.
 
 ```
 loadPackage("HyperplaneArrangements",Reload=>true);
+loadPackage("AlgebraicSplines",Reload=>true);
 ```
 
-This also loads the package "Polyhedra", which we will also need.
+The "HyperplaneArrangements" package loads the package "Polyhedra", which we will also need.
 
 ## Hyperplane arrangements
 
@@ -106,17 +107,16 @@ All these relationships between hyperplane arrangements and zonotopes (and a gre
 
 ## Generating the input for the generalized splines function
 
-In order to compute splines on the fan $\Sigma^A$ induced by a hyperplane arrangement $A\subset \mathbb{R}^n$ with a smoothness distribution $r:\Sigma^A_{n-1}\rightarrow \mathbb{Z}$, we need to extract the data of the vertices and edges of the zonotope $Z(A)$, along with the linear forms corresponding to each edge of the zonotope.  We can get this data as follows: if $v,w$ are adjacent vertices of $Z(A)$, then $v-w=\pm 2v_i$ for some vector $v_i$ orthogonal to a hyperplane of $A$.  Click on the following code to define the function "zonotopeEdgeLabels" that puts this all together.  We'll see how to use this function on the next screen.
+In order to compute splines on the fan $\Sigma^A$ induced by a hyperplane arrangement $A\subset \mathbb{R}^n$ with a smoothness distribution $r:\Sigma^A_{n-1}\rightarrow \mathbb{Z}$, we need to extract the data of the vertices and edges of the zonotope $Z(A)$, along with the linear forms corresponding to each edge of the zonotope.  We can get this data as follows: if $v,w$ are adjacent vertices of $Z(A)$, then $v-w=\pm 2v_i$ for some vector $v_i$ orthogonal to a hyperplane of $A$.  Click on the following code to define the function "zonotopeEdgeLabels" that puts this all together.  We'll see how to use this function on the next screen.  All functions defined in this tutorial can also be found in the file "Scripts_for_splines_on_hyperplanes.m2", which can be loaded independently to the web interface.
 
 ```
 --Inputs: A: a hyperplane arrangement A
---        r: a smoothness distribution on the hyperplanes (a list of integers, one for each hyperplane)
 --Outputs: A sequence (E,I) where
 --        E records the edges between vertices of Z(A)
 --        I records the edge labels using the smoothness distribution r
 
 zonotopeEdgeLabels = method()
-zonotopeEdgeLabels = (A,r) ->(
+zonotopeEdgeLabels = A ->(
     S := ring A;--get the ring of A
     hyps := A#(first keys A); --get the list of hyperplanes definining A
     M := coefficients A; --get the coefficient matrix of A
@@ -140,7 +140,7 @@ zonotopeEdgeLabels = (A,r) ->(
 	    p := position(V,v->v==vtxc);
 	    if not p===null then(
 		E = append(E,{vtxcnt,p});
-		I = append(I,hyps_(nrmcnt)^(r_nrmcnt+1));
+		I = append(I,hyps_(nrmcnt));
 		);
 	    nrmcnt=nrmcnt+1;
 	    );
@@ -152,25 +152,46 @@ zonotopeEdgeLabels = (A,r) ->(
 
 ## Using the zonotopeEdgeLabels function
 
-Let's recover the splines on the boolean arrangement $xy$ and $xyz$ using the zonotopeEdgeLabels function.  Make sure the algebraic splines package is loaded first.
-
-```
-loadPackage("AlgebraicSplines",Reload=>true)
-```
+Let's recover the splines on the boolean arrangement $xy$ and $xyz$ using the zonotopeEdgeLabels function.
 
 ```
 S=QQ[x,y]
 A1=arrangement{x,y}
-r1={0,0} --just continuous splines
-(E1,I1,Z1)=zonotopeEdgeLabels(A1,r1)
-Spl1=generalizedSplines(E1,I1)
+(E1,L1,Z1)=zonotopeEdgeLabels(A1)
+Spl1=generalizedSplines(E1,L1)--this returns the continous splines (no higher derivatives)
 ```
 Z1 in the code above is the actual zonotope.
 
 ```
 S=QQ[x,y,z]
 A2=arrangement{x,y,z}
-r2={0,0,0} --just continuous splines
-(E2,I2,Z2)=zonotopeEdgeLabels(A2,r2)
-Spl2=generalizedSplines(E2,I2)
+(E2,L2,Z2)=zonotopeEdgeLabels(A2)--this returns the continous splines (no higher derivatives)
+Spl2=generalizedSplines(E2,L2)
+```
+
+## Changing the smoothness distribution
+In our project, we will be changing the smoothness distribution across hyperplanes.  It will be useful to have a short script which goes through the list of edge labels and changes the exponents according to the smoothness distribution on the hyperplanes.  The following function does this.
+
+```
+assignSmoothness = method()
+assignSmoothness = (A,r,I)->(
+    hyps := A#(first keys A);--get the list of hyperplanes
+    smthHash := hashTable apply(length r,i->{hyps_i,r_i});--create a hash table that associates each linear form of the hyperplane to the desired smoothness
+    apply(I,h->h^(smthHash#h+1))--cycle through I, raising each linear form to the appropriate power
+    )
+```
+
+Here it is in operation.
+
+```
+S=QQ[x,y,z]
+A=arrangement {x,y,z}
+(E,L,Z)=zonotopeEdgeLabels(A)
+r={3,4,5}
+I=assignSmoothness(A,r,L)
+```
+Now we can feed $E$ and $I$ into generalizedSplines.
+
+```
+generalizedSplines(E,I)
 ```
