@@ -195,3 +195,5 @@ Now we can feed $E$ and $I$ into generalizedSplines.
 ```
 generalizedSplines(E,I)
 ```
+
+## Visualization
