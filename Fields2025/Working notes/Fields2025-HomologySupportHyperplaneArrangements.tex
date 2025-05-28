@@ -57,18 +57,18 @@
 	
 \maketitle
 
-The following lemma is a useful presentation for $H_1(\calJ[\Sigma])$ when $\Sigma$ is complete. This is the analogue of~\cite[Lemma~3.8]{LCoho} for complete fans.
+The following lemma is a useful presentation for $H_1(\calJ^{\br}[\Sigma])$ when $\Sigma$ is complete. This is the analogue of~\cite[Lemma~3.8]{LCoho} for complete fans.
 
 \begin{lemma}[{\cite[Lemma~9.12]{AssHom}}]\label{lem:H1Jpres}
-	Let $\Sigma\subset\R^3$ be a hereditary, complete fan.  Define $K^r\subset \bigoplus\limits_{\tau\in\Sigma_2} R(-\br(\tau))$ by
+	Let $\Sigma\subset\R^3$ be a hereditary, complete fan.  Define $K^r\subset \bigoplus\limits_{\tau\in\Sigma_2} R(-\br(\tau)-1)$ by
 	\[
-	K^{\br}=\{\sum_{\tau\ni\gamma} f_\tau e_\tau|\gamma\in\Sigma_1, \sum f_\tau \alpha_\tau^{\br(\tau)}=0\}.
+	K^{\br}=\{\sum_{\tau\ni\gamma} f_\tau e_\tau|\gamma\in\Sigma_1, \sum f_\tau \alpha_\tau^{\br(\tau)+1}=0\}.
 	\]
-	Also define $V^r\subset \bigoplus\limits_{\tau\in\Sigma_2} R(-\br(\tau))$ by
+	Also define $V^r\subset \bigoplus\limits_{\tau\in\Sigma_2} R(-\br(\tau)-1)$ by
 	\[
-	V^{\br}=\{\sum_{\tau\in\Sigma_2} f_\tau e_\tau| \sum f_\tau \alpha_\tau^{\br(\tau)}=0\}.
+	V^{\br}=\{\sum_{\tau\in\Sigma_2} f_\tau e_\tau| \sum f_\tau \alpha_\tau^{\br(\tau)+1}=0\}.
 	\]
-	Then $K^{\br}\subset V^{\br}$ and $H_1(\calJ[\Sigma])\cong V^{\br}/K^{\br}$ as $R$-modules.
+	Then $K^{\br}\subset V^{\br}$ and $H_1(\calJ^\br[\Sigma])\cong V^{\br}/K^{\br}$ as $R$-modules.
 \end{lemma}
 \begin{proof}
 	The proof is similar to the proof of ~\cite[Lemma~3.8]{LCoho}.  Let $K_\gamma^{\br}\subset \bigoplus_{\gamma\in\tau} R(-\br(\tau))e_\tau$ be the module of relations around the ray $\gamma\in\Sigma_1$, namely
@@ -88,7 +88,7 @@ The following lemma is a useful presentation for $H_1(\calJ[\Sigma])$ when $\Sig
 	\end{center}
 	
 	
-	The middle row is in fact exact because the inclusion on the left hand side has the effect of gluing together copies of $R(-\br(\tau))$ that correspond to different rays in $\Sigma_1$, leaving a copy of $R(-\br(\tau))$ for every codimension one face $\tau\in\Sigma_2$ in the cokernel.  Now the long exact sequence in homology yields the isomorphisms $H_2(\calJ[\Sigma])\cong \mbox{ker}(\iota)$ and $H_1(\calJ[\Sigma])\cong \mbox{coker}(\iota)$.  The image of $\bigoplus\limits_{\gamma\in\Sigma_1} K^{\br}_\gamma$ under $\iota$ is precisely $K^{\br}$, so we are done.
+	The middle row is in fact exact because the inclusion on the left hand side has the effect of gluing together copies of $R(-\br(\tau))$ that correspond to different rays in $\Sigma_1$, leaving a copy of $R(-\br(\tau))$ for every codimension one face $\tau\in\Sigma_2$ in the cokernel.  Now the long exact sequence in homology yields the isomorphisms $H_2(\calJ^\br[\Sigma])\cong \mbox{ker}(\iota)$ and $H_1(\calJ^\br[\Sigma])\cong \mbox{coker}(\iota)$.  The image of $\bigoplus\limits_{\gamma\in\Sigma_1} K^{\br}_\gamma$ under $\iota$ is precisely $K^{\br}$, so we are done.
 \end{proof}
 
 Now suppose $\A=\bigcup_{i=1}^k H_i\subset\RR^3$ is a hyperplane arrangement with associated complete fan $\Sigma^\A$.  Let $\br:\Sigma^\A_2\to \ZZ_{\ge -1}$ be a smoothness distribution that is constant on hyperplanes (that is, if $\tau,\tau'\subset H\in\A$, then $\br(\tau)=\br(\tau')$).  In this case, we also regard $\br$ as a map from $\A\to\ZZ_{\ge -1}$.  Let $M^{\br}=\begin{bmatrix} \alpha_1^{\br(H_1)} \cdots \alpha_k^{\br(H_k)} \end{bmatrix}$ be the matrix whose entries are the linear forms defining the hyperplanes of $\A$, raised to the power stipulated by $\br$.  Let
@@ -97,61 +97,141 @@ Now suppose $\A=\bigcup_{i=1}^k H_i\subset\RR^3$ is a hyperplane arrangement wit
 \]
 be the syzygy module of the matrix $M^{\br}$.  
 
-For a given line $\bar{\gamma}$ appearing as the intersection of at least two hyperplanes of $\A$, we write $M^{\br}_{\bar{\gamma}}$ for the matrix with a single row whose entries are $\{\alpha_{H}^{\br(H)}:\bar{\gamma}\subset H\}$.  We similarly have
+For a given line $W$ appearing as the intersection of at least two hyperplanes of $\A$, we write $M^{\br}_{W}$ for the matrix with a single row whose entries are $\{\alpha_{H}^{\br(H)}:W\subset H\}$.  We similarly have
 \[
-\syz(M^{\br}_{\bar{\gamma}}):=\left\lbrace\sum_{H\subset \bar{\gamma}} f_He_H: \sum_{H\subset \bar{\gamma}} f_H\alpha_H^{\br(H)}=0\right\rbrace\subset \bigoplus_{H\supset\bar{\gamma}} R(-\br(H)).
+\syz(M^{\br}_W):=\left\lbrace\sum_{H\supset W} f_He_H: \sum_{H\supset W} f_H\alpha_H^{\br(H)}=0\right\rbrace\subset \bigoplus_{H\supset W} R(-\br(H)-1).
 \]
-There is a natural inclusion from $\syz(M^{\br}_{\bar{\gamma}})$ into $\syz(M^{\br})$ by extending the syzygy on $M^{\br}_{\bar{\gamma}}$ by zero to the rest of the entries of $\syz(M^{\br})$.
+There is a natural inclusion from $\syz(M^{\br}_W)$ into $\syz(M^{\br})$ by extending the syzygy on $M^{\br}_W$ by zero to the rest of the entries of $\syz(M^{\br})$.
 
 \begin{corollary}\label{cor:HyperplaneH1pres}
 If $\A=\bigcup_{i=1}^k H_i\subset\RR^3$ is a hyperplane arrangement with associated complete fan $\Sigma^\A$, and $\br:\Sigma^{\A}_2\to\ZZ_{\ge 0}$ is a smoothness distribution, then
 \[
-H_1(\calJ[\Sigma^\A])\cong \dfrac{\syz (M^\br)}{\sum_{\bar{\gamma}\in L_2(\A)} \syz(M^{\br}_{\bar{\gamma}})},
+H_1(\calJ[\Sigma^\A])\cong \dfrac{\syz (M^\br)}{\sum_{W\in L_2(\A)} \syz(M^{\br}_W)},
 \]
 where $L_2(\A)$ is the collection of lines appearing as intersections of hyperplanes of $\A$.
 \end{corollary}
-
-
 
 \section{Three-generated hyperplane arrangements}
 
 The case $\br\equiv \bf{0}$ of Corollary~\ref{cor:HyperplaneH1pres} deserves special attention.
 
 \begin{corollary}
-If $\A=\bigcup_{i=1}^k H_i\subset\RR^3$ is a central and essential hyperplane arrangement with associated complete fan $\Sigma^\A$ and $\br\equiv \bf{0}$, then $H_1(\calJ[\Sigma^\A])$ is isomorphic to the $\RR$-vector space of $\RR$-linear relations among the linear forms $\alpha_1,\ldots,\alpha_k$ modulo the $\RR$-linear relations among $\alpha_1,\ldots,\alpha_k$ of length three.
+	If $\A=\bigcup_{i=1}^k H_i\subset\RR^3$ is a central and essential hyperplane arrangement with associated complete fan $\Sigma^\A$ and $\br\equiv \bf{0}$, then $H_1(\calJ[\Sigma^\A])$ is isomorphic to the $\RR$-vector space of $\RR$-linear relations among the linear forms $\alpha_1,\ldots,\alpha_k$ modulo the $\RR$-linear relations among $\alpha_1,\ldots,\alpha_k$ of length three.
 \end{corollary}
 \begin{proof}
-In this case, $\br(\tau)=1$ for all $\tau\in\Sigma^A_2$, so $M^{\br}=\begin{bmatrix} \alpha_1 \cdots \alpha_k\end{bmatrix}$.  Suppose $\alpha_1,\alpha_2, \alpha_3$ are a basis for the $\RR$-span of the entries of $M^{\br}$ (this is three dimensional since $\A$ is essential).
-
-Then $\syz(M^{\br})$ is generated by the Koszul syzygies on $\{\alpha_1,\alpha_2,\alpha_3\}$ along with all the $\RR$-linear relations on the entries of $M^{\br}$.  
-
-If $\bar{\gamma}\in L_2(\A)$, then we can select two linear forms, without loss suppose these are $\alpha_1$ and $\alpha_2$, that intersect in the line $\bar{\gamma}$.  The syzygy module $\syz(M^{\br}_{\bar{\gamma}})$ is generated by the Koszul syzygy between $\alpha_1$ and $\alpha_2$, along with the $\RR$-linear relations on $\{\alpha_H\}_{\gamma\in H}$.  Since these linear forms effectively live in the two-dimensional vector space spanned by $\alpha_1$ and $\alpha_2$, the relations among them all have length three.
-
-From the above descriptions, we see that the Koszul syzygies in $\syz(M^{\br})$ appear also in $\sum\limits_{\bar{\gamma}\in L_2(\A)}\syz(M^{\br}_{\bar{\gamma}})$.  Thus the presentation in Corollary~\ref{cor:HyperplaneH1pres} implies that 
-\[
-H_1(\calJ[\Sigma^\A])\cong \dfrac{\syz_0 (M^\br)}{\sum_{\bar{\gamma}\in L_2(\A)} \syz_0(M^{\br}_{\bar{\gamma}})},
-\]
-where $\syz_0$ represents `syzygies of degree zero' -- that is, $\RR$-linear relations.
-
-Furthermore, any relation of length three among $\{\alpha_1,\ldots,\alpha_k\}$, without loss suppose $c_1\alpha_1+c_2\alpha_2+c_3\alpha_3=0$, necessarily expresses the fact that $\alpha_1,\alpha_2,$ and $\alpha_3$ all vanish along a common line $\bar{\gamma}\in L_2(\A)$.  Thus this relation appears in $\syz(M^{\br}_{\bar{\gamma}})$.  It follows that we may recast the above presentation as the space of all $\RR$-linear relations on $\alpha_1,\ldots,\alpha_k$ modulo the space of $\RR$-linear relations of length three.
+	In this case, $\br(\tau)=1$ for all $\tau\in\Sigma^A_2$, so $M^{\br}=\begin{bmatrix} \alpha_1 \cdots \alpha_k\end{bmatrix}$.  Suppose $\alpha_1,\alpha_2, \alpha_3$ are a basis for the $\RR$-span of the entries of $M^{\br}$ (this is three dimensional since $\A$ is essential).
+	
+	Then $\syz(M^{\br})$ is generated by the Koszul syzygies on $\{\alpha_1,\alpha_2,\alpha_3\}$ along with all the $\RR$-linear relations on the entries of $M^{\br}$.  
+	
+	If $\bar{\gamma}\in L_2(\A)$, then we can select two linear forms, without loss suppose these are $\alpha_1$ and $\alpha_2$, that intersect in the line $\bar{\gamma}$.  The syzygy module $\syz(M^{\br}_{\bar{\gamma}})$ is generated by the Koszul syzygy between $\alpha_1$ and $\alpha_2$, along with the $\RR$-linear relations on $\{\alpha_H\}_{\gamma\in H}$.  Since these linear forms effectively live in the two-dimensional vector space spanned by $\alpha_1$ and $\alpha_2$, the relations among them all have length three.
+	
+	From the above descriptions, we see that the Koszul syzygies in $\syz(M^{\br})$ appear also in $\sum\limits_{\bar{\gamma}\in L_2(\A)}\syz(M^{\br}_{\bar{\gamma}})$.  Thus the presentation in Corollary~\ref{cor:HyperplaneH1pres} implies that 
+	\[
+	H_1(\calJ[\Sigma^\A])\cong \dfrac{\syz_0 (M^\br)}{\sum_{\bar{\gamma}\in L_2(\A)} \syz_0(M^{\br}_{\bar{\gamma}})},
+	\]
+	where $\syz_0$ represents `syzygies of degree zero' -- that is, $\RR$-linear relations.
+	
+	Furthermore, any relation of length three among $\{\alpha_1,\ldots,\alpha_k\}$, without loss suppose $c_1\alpha_1+c_2\alpha_2+c_3\alpha_3=0$, necessarily expresses the fact that $\alpha_1,\alpha_2,$ and $\alpha_3$ all vanish along a common line $\bar{\gamma}\in L_2(\A)$.  Thus this relation appears in $\syz(M^{\br}_{\bar{\gamma}})$.  It follows that we may recast the above presentation as the space of all $\RR$-linear relations on $\alpha_1,\ldots,\alpha_k$ modulo the space of $\RR$-linear relations of length three.
 \end{proof}
 
 \begin{definition}
-If $\A=\bigcup_{i=1}^k H_i$ is a hyperplane arrangement with $H_i$ the vanishing locus of $\alpha_i$ for $i=1,\ldots,k$, then $\A$ is called $3$-generated if the space of all $\RR$-linear relations among $\alpha_1,\ldots,\alpha_k$ is generated by the relations of length $3$.
+	If $\A=\bigcup_{i=1}^k H_i$ is a hyperplane arrangement with $H_i$ the vanishing locus of $\alpha_i$ for $i=1,\ldots,k$, then $\A$ is called $3$-generated if the space of all $\RR$-linear relations among $\alpha_1,\ldots,\alpha_k$ is generated by the relations of length $3$.
 \end{definition}
 
 \begin{lemma}
-If $\A=\bigcup_{i=1}^k H_i\subset\RR^3$ is a hyperplane arrangement with associated complete fan $\Sigma^\A$, and $\br:\Sigma^{\A}_2\to\ZZ_{\ge 0}$ is a smoothness distribution, then $H_1(\calJ[\Sigma^\A])$ has finite length.  Furthermore $S^{\br}(\Sigma^\A)$ is free if and only if $H_1(\calJ[\Sigma^\A])=0$.
+	If $\A=\bigcup_{i=1}^k H_i\subset\RR^3$ is a hyperplane arrangement with associated complete fan $\Sigma^\A$, and $\br:\Sigma^{\A}_2\to\ZZ_{\ge 0}$ is a smoothness distribution, then $H_1(\calJ[\Sigma^\A])$ has finite length.  Furthermore $S^{\br}(\Sigma^\A)$ is free if and only if $H_1(\calJ[\Sigma^\A])=0$.
 \end{lemma}
 \begin{proof}[Sketch of proof]
-Show that the localization of the presentation in Corollary~\ref{cor:HyperplaneH1pres} at all homogeneous prime ideals besides the maximal ideal vanishes.  The latter fact (concerning freeness) follows from a seminal result of Schenck~\cite{Spect}, generalized in~\cite[Theorem~3.4]{CohVan}.  In the three-dimensional case, this can be argued fairly quickly using Ext.
+	Show that the localization of the presentation in Corollary~\ref{cor:HyperplaneH1pres} at all homogeneous prime ideals besides the maximal ideal vanishes.  The latter fact (concerning freeness) follows from a seminal result of Schenck~\cite{Spect}, generalized in~\cite[Theorem~3.4]{CohVan}.  In the three-dimensional case, this can be argued fairly quickly using Ext.
 \end{proof}
 
 \begin{corollary}
-$S^0(\Sigma^\A)$ is free if and only if $\A$ is $3$-generated.
+	$S^0(\Sigma^\A)$ is free if and only if $\A$ is $3$-generated.
 \end{corollary}
 
 The subtlety of this can be seen in action with an example that is sometimes called \textit{Ziegler's pair}.  There will be a Macaulay demo walking through this example.
+
+\section{Unwinding the dimension of splines on complete three-dimensional fans}
+
+We regard $\br$ and $\Sigma$ as understood in this section, and so we write $\calJ$ instead of $\calJ^\br[\Sigma]$.  If $\Sigma$ is a complete three-dimensional fan, Lemma~\ref{lem:H1Jpres} can be used to give an interesting dimension formula for $S^\br(\Sigma)$.  Using the Euler characteristic of $\calJ$ and the fact that $H_0(\calJ)=0$ we get
+\[
+\dim H_2(\calJ)_d-\dim H_1(\calJ)_d=\sum_{\tau\in\Sigma_2} \dim J(\tau)_d-\sum_{\gamma\in\Sigma_1} J(\gamma)_d+\dim J(\mathbf{0})_d
+\]
+Now recall that $S^\br(\Sigma)\cong R\oplus H_2(\calJ)$.  This gives
+\begin{equation}\label{eq:homologyeqn}
+\dim S^\br(\Sigma)_d =\dim R_d+\sum_{\tau\in\Sigma_2} \dim J(\tau)_d-\sum_{\gamma\in\Sigma_1} \dim J(\gamma)_d+\dim J(\mathbf{0})_d+\dim H_1(\calJ)_d.
+\end{equation}
+Since $R=\RR[x,y,z]$, $\dim R_d=\binom{d+2}{2}$.  Since $J(\tau)=\langle \alpha_\tau^{\br(\tau)+1}\rangle$, $\dim J(\tau)_d=\binom{d+2-(\br(\tau)+1)}{2}=\binom{d+1-\br(\tau)}{2}$.  The dimension of $J(\gamma)_d$ is computed by Schenck and Geramita in~\cite{FatPoints}.  Their result is the following.  $J(\gamma)=\langle \alpha_\tau^{\br(\tau)+1}: \tau\ni\gamma\rangle$ is a codimension two Cohen-Macaulay ideal, and thus it has a Hilbert-Burch resolution.  Suppose that there are $n_\gamma+1$ codimension one cones containing $\gamma$ and that $\tau_0,\ldots,\tau_{n_{\gamma}}\in\Sigma_2$ are these codimension one cones.  Then $J(\gamma)$ is generated in degrees $e_0=\br(\tau_0)+1,\cdots,e_{n_\gamma}=\br(\tau_{n_{\gamma}})+1$.  Put $E_\gamma=\sum_{i=0}^{n_\gamma} e_i$.  The key technical result of \cite{FatPoints}, which is Theorem~2.7 of that paper, is that $\syz J(\gamma)$ is generated in degrees $d_1,\ldots,d_{n_\gamma}$ where $d_1\le d_2\le \cdots\le d_{n_\gamma}$ are each as close as possible to $E_\gamma/n_{\gamma}$.  To state this exactly, let $E_\gamma=q_\gamma n_\gamma + r_\gamma$ be the result of dividing $E_\gamma$ by $n_\gamma$ using the Euclidean algorithm.  Then $d_1=d_2=\ldots=d_{n_\gamma-r_\gamma}=q_\gamma$ and $d_{n_\gamma-r_\gamma+1}=\cdots=d_{n_\gamma}=q_\gamma+1$.  Thus
+\[
+\dim J(\gamma)_d=\sum_{\tau\ni \gamma} \binom{d+1-\br(\tau)}{2}-(n_\gamma-r_\gamma)\binom{d+2-q_\gamma}{2}-r_\gamma\binom{d+1-q_\gamma}{2}.
+\]
+In Equation~\eqref{eq:homologyeqn}, this leaves the term $\dim J(0)_d+\dim H_1(\calJ)_d$ unsimplified.  We simplify it as follows.  Consider the (generally non-minimal) exact sequence
+\[
+0\rightarrow \syz [\alpha_{\tau}^{\br(\tau)+1}: \tau\in\Sigma_2] \to \bigoplus_{\tau\in\Sigma_2} R(-\br(\tau)-1) \xrightarrow{[\alpha_{\tau}^{\br(\tau)+1}: \tau\in\Sigma_2]} J(0) \rightarrow 0.
+\]
+In the notation of Lemma~\ref{lem:H1Jpres}, $\syz [\alpha_{\tau}^{\br(\tau)+1}: \tau\in\Sigma_2]=V^{\br}$.  Thus we have $\dim J(0)=\sum_{\tau\in \Sigma_2} \binom{d+1-\br(\tau)}{2}-\dim V^{\br}_d$.  By Lemma~\ref{lem:H1Jpres}, we have $\dim H_1(\calJ)_d=\dim V^{\br}_d-\dim K^\br_d$.  Thus
+\begin{align*}
+\dim J(0)_d+\dim H_1(\calJ)_d = &  (\sum_{\tau\in \Sigma_2} \binom{d+1-\br(\tau)}{2}-\dim V^{\br}_d)+(\dim V^{\br}_d-\dim K^\br_d)\\
+= & \sum_{\tau\in \Sigma_2} \binom{d+1-\br(\tau)}{2}-\dim K^\br_d.
+\end{align*}
+Using these expressions to simplify~\eqref{eq:homologyeqn} and using the fact that $\sum\limits_{\tau\in\Sigma_2}\sum\limits_{\tau\ni\gamma} \binom{d+1-\br(\tau)}{2}=2\sum\limits_{\tau\in\Sigma_2}\binom{d+1-\br(\tau)}{2}$ (each codimension one cone $\tau$ contains two rays) we get the following.
+
+\begin{theorem}
+\[
+\dim S^{\br}(\Sigma)_d=\binom{d+2}{2}+\sum_{\gamma\in\Sigma_1} \left( (n_\gamma-r_\gamma)\binom{d+2-q_\gamma}{2}-r_\gamma\binom{d+1-q_\gamma}{2} \right) -\dim K^\br_d.
+\]
+\end{theorem}
+
+Using Corollary~\ref{cor:HyperplaneH1pres}, there is a different formulation of this theorem for a fan $\Sigma^\A$ induced by a hyperplane arrangement.
+
+\begin{theorem}
+Let $\A$ be a central hyperplane arrangement and $\Sigma=\Sigma^\A$ its induced fan.  Suppose that $\br:\Sigma_2\to\ZZ_{\ge -1}$ is constant along hyperplanes of $\A$ (so we may regard $\br$ also as a function $\br:\A\to \ZZ_{\ge -1})$.  Then
+\begin{multline*}
+\dim S^{\br}(\Sigma)=\binom{d+2}{2}-\sum_{\tau\in\Sigma_2}\binom{d+1-\br(\tau)}{2}+\sum_{\gamma\in\Sigma_1} \left( (n_\gamma-r_\gamma)\binom{d+2-q_\gamma}{2}-r_\gamma\binom{d+1-q_\gamma}{2} \right)\\
++\sum_{H\in\A}\binom{d+1-\br(H)}{2}-\dim\left(\sum_{W\in L_2(\A)} \syz(M^\br_W)\right)
+\end{multline*}
+
+\end{theorem}
+
+\section{Generic Hyperplane arrangements}
+
+A hyperplane arrangement $\A=\cup_{i=1}^k H_i\subset\R^3$ is called \textit{generic} if no three distinct hyperplanes $H_i,H_j,H_k\in \A$ intersect along a common line.  In this case we have the following explicit formulas.
+
+If $\gamma\in \Sigma^{\A}_1$, then there are exactly four two-dimensional cones of $\Sigma^\A$ that contain $\gamma$, and these four span only two distinct planes $H,H'\in\A$ by the assumption that $\A$ is generic.  So $J(\gamma)=\langle \alpha_H^{\br(H)+1},\alpha_{H'}^{\br(H')+1}\rangle$ is a complete intersection.
+
+Moreover $\syz M^{\br}_W$ is quite simple: each $W\in L_2(\A)$ is the intersection of exactly two hyperplanes $H,H'\in\A$.  Thus $\syz M^{\br}_W$ consists of the Koszul syzygy between $\alpha_H^{\br(H)+1}$ and $\alpha_{H'}^{\br(H')+1}$.  It follows that $\sum_{W\in L_2} \syz M^{\br}_W$ is the image of the Koszul syzygies inside the free module $\bigoplus_{H\in\A} R(-\br(H)-1)$.  Let us write $K_2(\A,\br)$ for the $|\A|\times \binom{|\A|}{2}$ matrix whose columns are the Koszul syzygies between all pairs $\alpha_H^{\br(H)+1},\alpha_{H'}^{\br(H')+1}$.  That is, let $N=\bigoplus_{H\in\A} R(-\br(\tau)-1)$.  Then $K_2(\A,\br)$ represents the map
+\[
+\wedge^2 N \xrightarrow{K_2(\A,\br)} N.
+\]
+We have the following proposition.
+
+\begin{proposition}\label{prop:GenericKoszul}
+If $\A\subset \RR^3$ is a generic hyperplane arrangement and $\Sigma=\Sigma^\A$ the induced fan, then
+\begin{align*}
+\dim S^{\br}(\Sigma^\A)_d= & \binom{d+2}{2}+\sum_{\tau\in\Sigma_2} \binom{d+1-\br(\tau)}{2}\\
+& -\sum_{\substack{\gamma\in\Sigma_1 \\ \gamma\subset H\cap H'}} \left[ \binom{d+1-\br(H)}{2}+\binom{d+1-\br(H')}{2}-\binom{d-\br(H)-\br(H')}{2}\right]\\
+&+\sum_{H\in\A} \binom{d+1-\br(H)}{2}-\dim (\mathrm{im} K_2(\A,\br))_d
+\end{align*}
+\end{proposition}
+
+This reduces finding $\dim S^{\br}(\Sigma^\A)$ to finding the Hilbert function of the image of the Koszul matrix $K_2(\A,\br)$.
+
+\begin{example}
+Suppose $\A=\cup_{i=1}^4 H_i$ is a generic three-dimensional arrangement and $\br(H_i)=0$ for $1\le i\le 4$.  Let $\alpha_i=\alpha_{H_i}$ for $1\le i\le 4$.  Then
+\begin{equation*}
+	K_2(\A,\br)=
+	\begin{blockarray}{ccccccc}
+		& 12 & 13 & 14& 23 & 24 & 34 \\
+		\begin{block}{c[cccccc]}
+			H_1 & \alpha_2 & \alpha_3 & \alpha_4 & 0 & 0 & 0 \\ 
+			H_2 & -\alpha_1 & 0 & 0 & \alpha_3 & \alpha_4 & 0 \\
+			H_3 & 0 & -\alpha_1 & 0 & -\alpha_2 & 0 & \alpha_4 \\
+			H_4 & 0 & 0 & -\alpha_1 & 0 & -\alpha_2 & -\alpha_3  \\
+		\end{block}
+	\end{blockarray}.
+\end{equation*}
+
+\end{example}
 
 \bibliography{SplinesBib}
 \bibliographystyle{plain}

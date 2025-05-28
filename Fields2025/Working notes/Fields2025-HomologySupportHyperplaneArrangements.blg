@@ -4,44 +4,44 @@ The top-level auxiliary file: Fields2025-HomologySupportHyperplaneArrangements.a
 A level-1 auxiliary file: bu.aux
 The style file: plain.bst
 Database file #1: SplinesBib.bib
-You've used 4 entries,
+You've used 5 entries,
             2118 wiz_defined-function locations,
-            529 strings with 4504 characters,
-and the built_in function-call counts, 1254 in all, are:
-= -- 132
-> -- 40
+            537 strings with 4638 characters,
+and the built_in function-call counts, 1587 in all, are:
+= -- 167
+> -- 53
 < -- 0
-+ -- 17
-- -- 12
-* -- 90
-:= -- 215
-add.period$ -- 12
-call.type$ -- 4
-change.case$ -- 18
++ -- 22
+- -- 16
+* -- 116
+:= -- 270
+add.period$ -- 15
+call.type$ -- 5
+change.case$ -- 23
 chr.to.int$ -- 0
-cite$ -- 4
-duplicate$ -- 44
-empty$ -- 105
-format.name$ -- 12
-if$ -- 253
+cite$ -- 5
+duplicate$ -- 55
+empty$ -- 132
+format.name$ -- 16
+if$ -- 321
 int.to.chr$ -- 0
-int.to.str$ -- 4
-missing$ -- 4
-newline$ -- 23
-num.names$ -- 8
-pop$ -- 10
+int.to.str$ -- 5
+missing$ -- 5
+newline$ -- 28
+num.names$ -- 10
+pop$ -- 13
 preamble$ -- 1
-purify$ -- 14
+purify$ -- 18
 quote$ -- 0
-skip$ -- 30
+skip$ -- 38
 stack$ -- 0
-substring$ -- 115
-swap$ -- 4
+substring$ -- 145
+swap$ -- 5
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 16
+type$ -- 20
 warning$ -- 0
-while$ -- 16
-width$ -- 5
-write$ -- 46
+while$ -- 20
+width$ -- 6
+write$ -- 57

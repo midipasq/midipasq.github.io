@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.8.7)  27 MAY 2025 22:18
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.8.7)  28 MAY 2025 00:54
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -843,61 +843,79 @@ Package hyperref Info: Link coloring ON on input line 56.
 \openout5 = `Fields2025-HomologySupportHyperplaneArrangements.out'.
 
 
-Overfull \hbox (8.28934pt too wide) in paragraph at lines 63--64
+Overfull \hbox (12.54768pt too wide) in paragraph at lines 63--64
 [][]\OT1/cmr/bx/n/10.95 Lemma 0.1 \OT1/cmr/m/n/10.95 ([[], Lemma 9.12])\OT1/cmr
 /bx/n/10.95 . []\OT1/cmr/m/it/10.95 Let $\OT1/cmr/m/n/10.95 ^^F \OMS/cmsy/m/n/1
 0.95 ^^Z \U/msb/m/n/10.95 R[]$ \OT1/cmr/m/it/10.95 be a hered-i-tary, com-plete
  fan. De-fine $\OML/cmm/m/it/10.95 K[] \OMS/cmsy/m/n/10.95 ^^Z [] \OML/cmm/m/it
 /10.95 R\OT1/cmr/m/n/10.95 (\OMS/cmsy/m/n/10.95 ^^@\OT1/cmr/bx/n/10.95 r\OT1/cm
-r/m/n/10.95 (\OML/cmm/m/it/10.95 ^^\\OT1/cmr/m/n/10.95 ))$
+r/m/n/10.95 (\OML/cmm/m/it/10.95 ^^\\OT1/cmr/m/n/10.95 ) \OMS/cmsy/m/n/10.95 ^^
+@
  []
 
 [1{/usr/local/texlive/2023/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-Overfull \hbox (24.31665pt too wide) in paragraph at lines 130--131
+Overfull \hbox (24.31665pt too wide) in paragraph at lines 128--129
 []\OT1/cmr/m/n/10.95 From the above de-scrip-tions, we see that the Koszul syzy
 -gies in $[](\OML/cmm/m/it/10.95 M[]\OT1/cmr/m/n/10.95 )$ ap-pear also in $[] [
 ](\OML/cmm/m/it/10.95 M[]\OT1/cmr/m/n/10.95 )$.
  []
 
-[2]
+[2] [3]
+Overfull \hbox (12.53358pt too wide) in paragraph at lines 171--173
+\OT1/cmr/m/n/10.95 In the no-ta-tion of Lemma [][]0.1[][], $[][\OML/cmm/m/it/10
+.95 [] \OT1/cmr/m/n/10.95 : \OML/cmm/m/it/10.95 ^^\ \OMS/cmsy/m/n/10.95 2 \OT1
+/cmr/m/n/10.95 ^^F[]] = \OML/cmm/m/it/10.95 V[]$\OT1/cmr/m/n/10.95 . Thus we ha
+ve $[] \OML/cmm/m/it/10.95 J\OT1/cmr/m/n/10.95 (0) = [][] [] \OMS/cmsy/m/n/10.9
+5 ^^@
+ []
+
+
+Overfull \hbox (4.15408pt too wide) in paragraph at lines 176--178
+\OT1/cmr/m/n/10.95 Using these ex-pres-sions to sim-plify [] and us-ing the fac
+t that $[] [] [] = 2 [] []$
+ []
+
+[4]
 \openout3 = `bu.aux'.
 
- (./Fields2025-HomologySupportHyperplaneArrangements.bbl) [3]
+ (./Fields2025-HomologySupportHyperplaneArrangements.bbl) [5]
 (./Fields2025-HomologySupportHyperplaneArrangements.aux (./bu.aux))
 Package rerunfilecheck Info: File `Fields2025-HomologySupportHyperplaneArrangem
 ents.out' has not changed.
-(rerunfilecheck)             Checksum: 48EF0EF59082566BDA26AC677EEFCF91;356.
+(rerunfilecheck)             Checksum: 4068F696B34D39E35E7E0DA8EE2A45D4;1008.
  ) 
 Here is how much of TeX's memory you used:
- 24300 strings out of 476025
- 461018 string characters out of 5790018
- 1878388 words of memory out of 5000000
- 44148 multiletter control sequences out of 15000+600000
+ 24395 strings out of 476025
+ 462450 string characters out of 5790018
+ 1879388 words of memory out of 5000000
+ 44233 multiletter control sequences out of 15000+600000
  524724 words of font info for 77 fonts, out of 8000000 for 9000
  1302 hyphenation exceptions out of 8191
- 98i,18n,103p,670b,1047s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 98i,18n,103p,1377b,1047s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
-></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx8.pfb><
-/usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.pfb><
-/usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></
-usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></u
-sr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr
-/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/l
-ocal/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/loc
-al/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/
-texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/tex
-live/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texliv
-e/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive
-/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2
-023/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/20
-23/texmf-dist/fonts/type1/public/amsfonts/cm/cmti9.pfb></usr/local/texlive/2023
-/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb></usr/local/texlive/
-2023/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on Fields2025-HomologySupportHyperplaneArrangements.pdf (3 pages
-, 203761 bytes).
+></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx6.pfb><
+/usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx8.pfb></u
+sr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.pfb></u
+sr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></us
+r/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr
+/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/l
+ocal/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/loc
+al/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local
+/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/te
+xlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texli
+ve/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texlive/
+2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2
+023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/local/texlive/202
+3/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2023/
+texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2023/t
+exmf-dist/fonts/type1/public/amsfonts/cm/cmti9.pfb></usr/local/texlive/2023/tex
+mf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb></usr/local/texlive/2023
+/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
+Output written on Fields2025-HomologySupportHyperplaneArrangements.pdf (5 pages
+, 242621 bytes).
 PDF statistics:
- 139 PDF objects out of 1000 (max. 8388607)
- 99 compressed objects within 1 object stream
- 16 named destinations out of 1000 (max. 500000)
- 29 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 182 PDF objects out of 1000 (max. 8388607)
+ 135 compressed objects within 2 object streams
+ 26 named destinations out of 1000 (max. 500000)
+ 45 words of extra memory for PDF output out of 10000 (max. 10000000)
 
