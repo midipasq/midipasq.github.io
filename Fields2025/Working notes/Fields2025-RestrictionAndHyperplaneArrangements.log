@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.8.7)  20 MAY 2025 22:59
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.8.7)  27 MAY 2025 22:14
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -847,17 +847,17 @@ Package hyperref Info: Link coloring ON on input line 55.
 \openout3 = `bu.aux'.
 
 
-(./Fields2025-RestrictionAndHyperplaneArrangements.bbl [5]) [6]
+(./Fields2025-RestrictionAndHyperplaneArrangements.bbl) [5]
 (./Fields2025-RestrictionAndHyperplaneArrangements.aux (./bu.aux))
 Package rerunfilecheck Info: File `Fields2025-RestrictionAndHyperplaneArrangeme
 nts.out' has not changed.
-(rerunfilecheck)             Checksum: 492F34656AEB7BB483F9862DFF919367;1231.
+(rerunfilecheck)             Checksum: 36406B9596B2709C80F15536894B538C;983.
  ) 
 Here is how much of TeX's memory you used:
- 24243 strings out of 476025
- 458796 string characters out of 5790018
+ 24242 strings out of 476025
+ 458785 string characters out of 5790018
  1873388 words of memory out of 5000000
- 44053 multiletter control sequences out of 15000+600000
+ 44054 multiletter control sequences out of 15000+600000
  524724 words of font info for 77 fonts, out of 8000000 for 9000
  1302 hyphenation exceptions out of 8191
  98i,11n,103p,1162b,732s stack positions out of 10000i,1000n,20000p,200000b,200000s
@@ -879,11 +879,11 @@ e/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive
 /texmf-dist/fonts/type1/public/amsfonts/cm/cmti9.pfb></usr/local/texlive/2023/t
 exmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb></usr/local/texlive/20
 23/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on Fields2025-RestrictionAndHyperplaneArrangements.pdf (6 pages,
- 244793 bytes).
+Output written on Fields2025-RestrictionAndHyperplaneArrangements.pdf (5 pages,
+ 242430 bytes).
 PDF statistics:
- 223 PDF objects out of 1000 (max. 8388607)
- 177 compressed objects within 2 object streams
- 54 named destinations out of 1000 (max. 500000)
- 61 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 215 PDF objects out of 1000 (max. 8388607)
+ 170 compressed objects within 2 object streams
+ 52 named destinations out of 1000 (max. 500000)
+ 53 words of extra memory for PDF output out of 10000 (max. 10000000)
 

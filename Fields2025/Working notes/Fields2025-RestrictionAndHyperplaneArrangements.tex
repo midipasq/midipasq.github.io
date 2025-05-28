@@ -296,41 +296,51 @@ $S^{\br}(G_{\Sigma},\ell|_H)$ appears to be a good candidate for addition-deleti
 
 \section{If both the spline module and its deletion are free}
 
-\section{Localization and splines}
-
-Let $G$ be a graph, $R$ a polynomial ring, $\ell: E\to R_1$ a map associating edges to linear forms, $\br:E\to \ZZ_{\ge -1}$ a smoothness distribution, and $S^r(G,\ell)$ the module of generalized splines associated to this data.
-
-In this section we discuss the behavior of $S^r(G,\ell)$ under localization at a prime ideal $P\subset R$.  Let $G_P=(E_P,V_P)$ be the subgraph of $G$ on the same vertex set (so $V_P=V$), where $E_P=\{e\in E: \ell(e)\in P\}$.  We write $\ell_P, \br_P$ for the restriction of $\ell$ and $\br$ to $E_P$.
-
-\begin{lemma}
-Suppose $G_P$ has connected components $G^1_P,\ldots,G^c_P$.  Then
-\[
-
-\]
-\end{lemma}
-
-\section{Restriction to a generic hyperplane}
-
-In this section we will see that, in case $H$ is what we call a \textit{generic} hyperplane, then $S^{\br}(G_{\Sigma},\ell|_H)$ is a good restriction in the sense that the map $\pi$ in Proposition~\ref{prop:first-sequence} is surjective in codimension two.  We start with a simple proposition.
+I think the following result can be proved more or less by the same method as~\cite[Theorem~0.4]{ATW08}.
 
 \begin{proposition}
-Let $\alpha\in R$ be a polynomial and $I$ an ideal of $R$.  Given a positive integer $k$, define a map $\phi: \dfrac{S}{\langle \alpha^k\rangle+I}\to \dfrac{S}{\langle \alpha^{k+1}\rangle +I}$ by $\phi(F+\langle \alpha^k\rangle+I)=\alpha\cdot F+\langle \alpha^{k+1}\rangle+I$, where $F\in R$.  Then
-\begin{itemize}
-\item $\phi$ is a well-defined homomorphism of $R$-modules.
-\item If $\alpha$ is a non-zero divisor on $R/I$, then $\phi$ is injective.
-\end{itemize}
+Let $\br$ be a non-negative smoothness distribution on the hyperplane $H$ and $(\Sigma,\br-\mathbf{1}_H)$ be the deletion along $H$.	 Put $t=|\Sigma_n|$.  Suppose that both $S^{\br-\mathbf{1}_H}(\Sigma)$ and $S^{\br}(\Sigma)$ are free.  Suppose that there are $k$ cones of dimension $n-1$ that are contained in $H$ (we necessarily have $k\le t$).  Then there is a basis $F_1,\ldots F_t$ for $S^{\br-\mathbf{1}_H}(\Sigma)$ as an $R$-module so that $\deg(F_1)\le \deg(F_2)\le \cdots\le \deg(F_t)$, and there are indices $1\le i_1\le \cdots \le i_k\le t$ so that $\{\alpha_HF_j\}_{j\in\{i_1,\ldots,i_k\}}\cup \{F_i\}_{i\in [k]\setminus \{i_1,\ldots,i_k\}}$ is a basis for $S^{\br}(\Sigma)$ as an $R$-module.
 \end{proposition}
-\begin{proof}
-To show $\phi$ is well-defined, suppose that $F,G\in R$ satisfy that $F+\langle\alpha^k\rangle+I=G+\langle\alpha^k\rangle+I$.  Then there exist $f\in R$ and $p\in I$ so that $F-G=f\alpha^k+p$.  So $\alpha\cdot F-\alpha\cdot G=f\alpha^{k+1}+\alpha\cdot p\in \langle\alpha^{k+1}\rangle+I$.  It follows that $\phi$ is well-defined.  It is routine to check that $\phi$ is a homorphism of $R$-modules.
 
-Now suppose that $\alpha$ is a non-zero divisor on $R/I$.  We show $\phi$ is injective.  Suppose $F\in R$ and $\phi(F+\langle \alpha^k\rangle+I)=\alpha\cdot F+\langle\alpha^{k+1}\rangle+I=0+\langle\alpha^{k+1}\rangle+I$.  Then $\alpha\cdot F\in \langle\alpha^{k+1}\rangle+I$, so there exist $f\in R$, $p\in I$ so that $\alpha\cdot F=f\alpha^{k+1}+p$.  Hence $\alpha(F-\alpha^k)\in I$.  But $\alpha$ is a non-zero divisor on $R/I$, hence we must have $F-\alpha^k\in I$, or $F+\langle \alpha^{k}\rangle + I=0+\langle \alpha^{k}\rangle + I$.  Hence $\phi$ is injective.
-\end{proof}
+\begin{example}
 
-To simplify things, we only make the following definition for $\RR^3$ only.
+\end{example}
 
-\begin{definition}
-Let $\Sigma\subset \RR^3$ be a fan, and $H$ a hyperplane in $\RR^n$.  We say $H$ is \textit{generic} (with respect to $\Sigma$) if, for every ray $\gamma\in\Sigma_{1}$ so that $\gamma\subset H$, there exists a hyperplane $H'$ so that if $\tau\in\Sigma_{2}$ and $\gamma\subset\tau$ then $\alpha_\tau=\alpha_H$ or $\alpha_\tau=\alpha_{H'}$.  In particular, this condition is met if $H$ is chosen so that no $\gamma\in\Sigma_{1}$ is contained in $H$.
-\end{definition}
+%\section{Localization and splines}
+%
+%Let $G$ be a graph, $R$ a polynomial ring, $\ell: E\to R_1$ a map associating edges to linear forms, $\br:E\to \ZZ_{\ge -1}$ a smoothness distribution, and $S^r(G,\ell)$ the module of generalized splines associated to this data.
+%
+%In this section we discuss the behavior of $S^r(G,\ell)$ under localization at a prime ideal $P\subset R$.  Let $G_P=(E_P,V_P)$ be the subgraph of $G$ on the same vertex set (so $V_P=V$), where $E_P=\{e\in E: \ell(e)\in P\}$.  We write $\ell_P, \br_P$ for the restriction of $\ell$ and $\br$ to $E_P$.
+%
+%\begin{lemma}
+%Suppose $G_P$ has connected components $G^1_P,\ldots,G^c_P$.  Then
+%\[
+%
+%\]
+%\end{lemma}
+
+%\section{Restriction to a generic hyperplane}
+%
+%In this section we will see that, in case $H$ is what we call a \textit{generic} hyperplane, then $S^{\br}(G_{\Sigma},\ell|_H)$ is a good restriction in the sense that the map $\pi$ in Proposition~\ref{prop:first-sequence} is surjective in codimension two.  We start with a simple proposition.
+%
+%\begin{proposition}
+%Let $\alpha\in R$ be a polynomial and $I$ an ideal of $R$.  Given a positive integer $k$, define a map $\phi: \dfrac{S}{\langle \alpha^k\rangle+I}\to \dfrac{S}{\langle \alpha^{k+1}\rangle +I}$ by $\phi(F+\langle \alpha^k\rangle+I)=\alpha\cdot F+\langle \alpha^{k+1}\rangle+I$, where $F\in R$.  Then
+%\begin{itemize}
+%\item $\phi$ is a well-defined homomorphism of $R$-modules.
+%\item If $\alpha$ is a non-zero divisor on $R/I$, then $\phi$ is injective.
+%\end{itemize}
+%\end{proposition}
+%\begin{proof}
+%To show $\phi$ is well-defined, suppose that $F,G\in R$ satisfy that $F+\langle\alpha^k\rangle+I=G+\langle\alpha^k\rangle+I$.  Then there exist $f\in R$ and $p\in I$ so that $F-G=f\alpha^k+p$.  So $\alpha\cdot F-\alpha\cdot G=f\alpha^{k+1}+\alpha\cdot p\in \langle\alpha^{k+1}\rangle+I$.  It follows that $\phi$ is well-defined.  It is routine to check that $\phi$ is a homorphism of $R$-modules.
+%
+%Now suppose that $\alpha$ is a non-zero divisor on $R/I$.  We show $\phi$ is injective.  Suppose $F\in R$ and $\phi(F+\langle \alpha^k\rangle+I)=\alpha\cdot F+\langle\alpha^{k+1}\rangle+I=0+\langle\alpha^{k+1}\rangle+I$.  Then $\alpha\cdot F\in \langle\alpha^{k+1}\rangle+I$, so there exist $f\in R$, $p\in I$ so that $\alpha\cdot F=f\alpha^{k+1}+p$.  Hence $\alpha(F-\alpha^k)\in I$.  But $\alpha$ is a non-zero divisor on $R/I$, hence we must have $F-\alpha^k\in I$, or $F+\langle \alpha^{k}\rangle + I=0+\langle \alpha^{k}\rangle + I$.  Hence $\phi$ is injective.
+%\end{proof}
+%
+%To simplify things, we only make the following definition for $\RR^3$ only.
+%
+%\begin{definition}
+%Let $\Sigma\subset \RR^3$ be a fan, and $H$ a hyperplane in $\RR^n$.  We say $H$ is \textit{generic} (with respect to $\Sigma$) if, for every ray $\gamma\in\Sigma_{1}$ so that $\gamma\subset H$, there exists a hyperplane $H'$ so that if $\tau\in\Sigma_{2}$ and $\gamma\subset\tau$ then $\alpha_\tau=\alpha_H$ or $\alpha_\tau=\alpha_{H'}$.  In particular, this condition is met if $H$ is chosen so that no $\gamma\in\Sigma_{1}$ is contained in $H$.
+%\end{definition}
 
 
 

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.8.7)  20 MAY 2025 22:48
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.8.7)  27 MAY 2025 22:18
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -853,7 +853,7 @@ r/m/n/10.95 (\OML/cmm/m/it/10.95 ^^\\OT1/cmr/m/n/10.95 ))$
  []
 
 [1{/usr/local/texlive/2023/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-Overfull \hbox (24.31665pt too wide) in paragraph at lines 126--127
+Overfull \hbox (24.31665pt too wide) in paragraph at lines 130--131
 []\OT1/cmr/m/n/10.95 From the above de-scrip-tions, we see that the Koszul syzy
 -gies in $[](\OML/cmm/m/it/10.95 M[]\OT1/cmr/m/n/10.95 )$ ap-pear also in $[] [
 ](\OML/cmm/m/it/10.95 M[]\OT1/cmr/m/n/10.95 )$.
@@ -866,13 +866,13 @@ Overfull \hbox (24.31665pt too wide) in paragraph at lines 126--127
 (./Fields2025-HomologySupportHyperplaneArrangements.aux (./bu.aux))
 Package rerunfilecheck Info: File `Fields2025-HomologySupportHyperplaneArrangem
 ents.out' has not changed.
-(rerunfilecheck)             Checksum: EDE23595DCA8A4392503813D74F4CD13;94.
+(rerunfilecheck)             Checksum: 48EF0EF59082566BDA26AC677EEFCF91;356.
  ) 
 Here is how much of TeX's memory you used:
- 24298 strings out of 476025
- 460998 string characters out of 5790018
+ 24300 strings out of 476025
+ 461018 string characters out of 5790018
  1878388 words of memory out of 5000000
- 44147 multiletter control sequences out of 15000+600000
+ 44148 multiletter control sequences out of 15000+600000
  524724 words of font info for 77 fonts, out of 8000000 for 9000
  1302 hyphenation exceptions out of 8191
  98i,18n,103p,670b,1047s stack positions out of 10000i,1000n,20000p,200000b,200000s
@@ -894,10 +894,10 @@ e/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive
 /texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb></usr/local/texlive/
 2023/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
 Output written on Fields2025-HomologySupportHyperplaneArrangements.pdf (3 pages
-, 201454 bytes).
+, 203761 bytes).
 PDF statistics:
- 134 PDF objects out of 1000 (max. 8388607)
- 94 compressed objects within 1 object stream
- 15 named destinations out of 1000 (max. 500000)
- 21 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 139 PDF objects out of 1000 (max. 8388607)
+ 99 compressed objects within 1 object stream
+ 16 named destinations out of 1000 (max. 500000)
+ 29 words of extra memory for PDF output out of 10000 (max. 10000000)
 
