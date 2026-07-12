@@ -15,7 +15,7 @@ veronese = (U,d)->apply(compositions(#U,d),c->product apply(#U,i->U_i^(c_i)))
 
 ## Maximal Kruskal ranks
 
-The running example in the final section of our paper is given by the columns of 
+The running example in the section 6 of our paper is given by the columns of 
 ```
 M=matrix {{2, 4, 0, 3, 5, 2, 1, 9, 4, 7, 6, 5, 5}, {9, 9, 1, 5, 3, 7, 2, 3, 5, 8, 2, 7, 1}, {4, 8, 6, 1, 0, 8, 6, 2, 8, 8, 4, 2, 2}, {0, 9, 1, 5, 5, 1, 6, 2, 3, 4, 0, 5, 7}}
 ```
