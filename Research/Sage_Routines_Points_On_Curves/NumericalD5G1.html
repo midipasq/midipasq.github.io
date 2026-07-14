@@ -1,0 +1,333 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>SageMathCell</title>
+    <script src="https://sagecell.sagemath.org/static/embedded_sagecell.js"></script>
+    <script>
+    // Make the div with id 'mycell' a Sage cell
+    sagecell.makeSagecell({inputLocation:  '#mycell',
+                           hide: ['editor'],
+                           evalButtonText: 'Evaluate',
+			   linked: true,
+			   linkKey: "linkcell"});
+    // Make *any* div with class 'compute' a Sage cell
+    sagecell.makeSagecell({inputLocation: 'div.compute',
+                           evalButtonText: 'Evaluate',
+			   linked: true,
+			   linkKey: "linkcell"});
+    </script>
+  </head>
+  <body>
+  <h1>Numerically verify that a set of thirteen points is not on an integral quintic curve of genus one</h1>
+
+The ideal of thirteen general points in complex projective 3-space is defined by seven cubics, with 6 minimal syzygies of degree 4 and 3 of degree 5, and 3 second syzygies of degree 6.  If the thirteen points are on an integral quintic curve of genus one, then there will be a second syzygy of degree 5; the point of Algorithm 2 in Section 6 of our paper is that we can guarantee that a collection of thirteen points does not lie on an integral quintic curve of genus one if its ideal does not have a second syzygy of degree 5.  The following code showcases this result numerically.  In order to produce second syzygies, we use the functions in <a href="NumericalSyzygies.sage"> NumericalSyzygies.sage </a>.  These routines use singular value decomposition and a user-defined tolerance on singular values to produce syzygies of a fixed degree using only linear algebra.
+
+<h2>Load functions to compute Numerical Syzygies</h2>
+Click the "Evaluate" button below to define the functions in the file <a href="NumericalSyzygies.sage"> NumericalSyzygies.sage </a> .
+  
+<div id="mycell"><script type="text/x-sage">
+#Get fat point ideals in various degrees
+
+#Take the derivative of a monomial x^a with respect to y^b and evaluate at a point p
+def monomial_derivative_evaluation(a,b,p):
+    a = vector(a);
+    b = vector(b);
+    d = a-b;
+    neg_c = false;
+    ind = 0;
+    while not neg_c and ind<len(d):
+        if d[ind]<0:
+            neg_c = true
+        ind = ind+1
+    if neg_c:
+        return(0)
+    else:
+        return(product([factorial(a[i])/factorial(a[i]-b[i])*p[i]^(d[i]) for i in range(0,len(a))]))
+        
+#Matrix whose kernel consists of all polynomials of degree deg which vanish to order ord at points in ptlist
+def fat_matrix(deg,ord,ptlist):
+    num_vars = len(ptlist[0]);
+    monexp = IntegerVectors(deg,num_vars);
+    mat_rows = [];
+    for i in range(0,len(ptlist)):
+        p = ptlist[i];
+        deriv_mons = IntegerVectors(ord[i],num_vars);
+        for m in deriv_mons:
+            mat_rows=mat_rows+[[monomial_derivative_evaluation(n,m,p) for n in monexp]];
+    return(matrix(mat_rows))
+                    
+#Take matrix with columns consisting of coefficients and turn it into polynomials
+def vec_to_poly(coeff,deg,vrs,row=true):
+    BS = matrix([[product([(vrs[i])^(a[i]) for i in range(0,len(a))]) for a in IntegerVectors(deg,len(vrs))]]);
+    if coeff.nrows()==0 or coeff.ncols()==0:
+        return(0)
+    if row:
+        return(coeff*(BS.transpose()))
+    else:
+        return(BS*coeff)
+
+#Basis for polynomials of degree deg that vanish to order ord at points in ptlist
+def fat_ideal(deg,ord,ptlist,vrs=None,poly_form=true):
+    FM = fat_matrix(deg,ord,ptlist);
+    K = matrix((fat_matrix(deg,ord,ptlist)).right_kernel().basis());
+    if poly_form:
+        return(vec_to_poly(K,deg,vrs))
+    else:
+        return(K)
+
+
+###The following is a number of commands that allow the computation of (numerical) syzygies.
+###The computations rely on passing completely into the realm of linear algebra and using SVD to approximate rank
+
+#monomial exponentiation
+def monexp(vrs,expn):
+    return(product([v[0]^(v[1]) for v in zip(vrs,expn)]))
+    
+#Get basis for polynomials homogeneous of degree d
+def poly_basis(deg,vrs):
+    num=len(vrs);
+    basisvecs = [list(m) for m in IntegerVectors(deg,num)];
+    return([monexp(vrs,expn) for expn in basisvecs])
+
+#get coefficients of polynomial in preferred order
+def coeffs(F,basis):
+    return([F.coefficient(m) for m in basis])
+
+#Given a matrix of polynomials, convert each polynomial entry into a coefficient vector (column)
+def coeffs_mat(M,Degs,vrs):
+    return(block_matrix([[matrix(zip(*[coeffs(M[i,j],poly_basis(Degs[i,j],vrs)) for j in range(0,M.ncols())]))] for i in range(0,M.nrows())]))
+
+#Given a list with polynomial entries, return a list of those polynomials multiplied by all monomials of a given degree (degree may vary for each polynomial)
+def mon_mult(PolyList,DegreeDeficits,vrs):
+    return(flatten([[expand(m*PolyList[i]) for m in poly_basis(DegreeDeficits[i],vrs)] for i in range(0,len(PolyList))]))
+
+#Given a matrix with polynomial entries, return a matrix whose rows are multiplied by all monomials of a given degree (output of previous function)
+def mon_mult_matrix(PolyMat,DegreeDeficits,vrs):
+    return(matrix([mon_mult(rw,DegreeDeficits,vrs) for rw in PolyMat.rows()]))
+
+#Index selection functions
+def ind_select_less(L,tol):
+    iList = [i for i,x in enumerate(L) if x<tol]
+    if len(iList)==0:
+        return(len(L))
+    else:
+        return(iList[0])
+
+#def ind_select_greater(L,tol):
+#    return([i for i,x in enumerate(L) if x>tol])
+
+#Convert a matrix of coefficients (assumed column vectors) back into a matrix of polynomials
+def coeff_to_poly(cfMat,Degs,vrs):
+    pMat = [];
+    for c in range(0,cfMat.ncols()):
+        indx = 0;
+        pCol = [];
+        for cnt in range(0,Degs.nrows()):
+            mns = poly_basis(Degs[cnt,c],vrs);
+            cntln = len(mns);
+            poly=0;
+            for incnt in range(0,cntln):
+                poly = poly+vec[indx]*mns[incnt];
+                indx = indx+1;
+            pCol=pCol+[poly];
+        pMat = pMat+[pCol];
+    return(transpose(matrix(pMat)))
+
+#Convert a column relation back into a polynomial relation, given DegreeDeficits
+def rel_to_poly(rMat,DegreeDeficits,vrs):
+        relMat = [];
+        for vec in rMat.columns():
+            indx = 0;
+            relCol = [];
+            for cnt in range(0,len(DegreeDeficits)):
+                mns = poly_basis(DegreeDeficits[cnt],vrs);
+                cntln = len(mns);
+                poly=0;
+                for incnt in range(0,cntln):
+                    poly = poly+vec[indx]*mns[incnt];
+                    indx = indx+1;
+                relCol=relCol+[poly];
+            relMat=relMat+[relCol];
+        return(transpose(matrix(relMat)))
+
+#NUMERICAL syzygies of a list of homogeneous polynomials in a specific degree
+def num_syz(PolyList,DegreeDeficits,deg,vrs,as_poly=false,tol=10^(-12)):
+    bs = poly_basis(deg,vrs);
+    exp_mons = mon_mult(PolyList,DegreeDeficits,vrs);
+    cfMat = matrix([coeffs(F,bs) for F in exp_mons]);
+    [U,S,V] = cfMat.change_ring(CDF).SVD();
+    mn = min(S.ncols(),S.nrows());
+    singVals = [S[i,i] for i in range(0,mn)];
+    IND = ind_select_less(singVals,tol);
+    num_ker = conjugate(U[range(0,U.nrows()),range(IND,U.ncols())])
+    if as_poly:
+        return(rel_to_poly(num_ker,DegreeDeficits,vrs))
+    else:
+        return(num_ker)
+
+#Numerical intersection of column spaces (same ambient!).  Assumes that matrices have independent columns.
+def num_intersect(L,tol=10^(-10)):
+    #L is a list of matrices; we will return the numerical intersection of the column spaces
+    ocmps = [orth_comp(M) for M in L];
+    return(orth_comp(block_matrix([ocmps]),indep_cols=false,tol=tol))
+
+#Numerical orthogonal complement of a column space with respect to another
+def orth_comp_subspace(MAT1,MAT2,tol=10^(-12)):
+    #Take orthogonal complement of col(MAT2) with respect to col(MAT1)
+    [U1,S1,V1] = MAT1.change_ring(CDF).SVD();
+    mn1 = min(S1.ncols(),S1.nrows());
+    singVals1 = [S1[i,i] for i in range(0,mn1)];
+    IND1 = ind_select_less(singVals1,tol);
+    O1 = U1[range(0,U1.nrows()),range(0,IND1)];
+    ProjM = O1*(O1.conjugate_transpose());
+    ID = matrix.identity(ProjM.ncols());
+    Orth1 = (ID-ProjM)*MAT2;
+    [U,S,V] = Orth1.change_ring(CDF).SVD();
+    mn = min(S.ncols(),S.nrows());
+    singVals = [S[i,i] for i in range(0,mn)];
+    IND = ind_select_less(singVals,tol);
+    return(U[range(0,U.nrows()),range(0,IND)])
+
+#Numerical orthogonal complement of column space
+def orth_comp(MAT,indep_cols=true,tol=10^(-12)):
+    [U,S,V] = MAT.change_ring(CDF).SVD();
+    if indep_cols:
+        r = MAT.ncols();
+        return( (U[range(0,U.nrows()),range(r,U.ncols())]).conjugate())
+    else:
+        singVals = [S[i,i] for i in range(0,min(S.ncols(),S.nrows()))];
+        IND = ind_select_less(singVals,tol);
+        return((U[range(0,U.nrows()),range(IND,U.ncols())]).conjugate())            
+        
+#NUMERICAL syzygies of a matrix of polynomials with homogeneous entries
+def num_syz_matrix(PolyMat,DegreeDeficits,row_degs,vrs,tol=10^(-12),as_poly=true):
+    row_kers = [num_syz(list(PolyMat.row(i)),DegreeDeficits,row_degs[i],vrs,tol=tol) for i in range(0,PolyMat.nrows())];
+    num_ker=num_intersect(row_kers,tol=tol)
+    if as_poly:
+        return(rel_to_poly(num_ker,DegreeDeficits,vrs))
+    else:
+        return(num_ker)
+
+#Print that the functions have loaded successfully
+print("Successfully loaded functions from NumericalSyzygies.sage")
+
+</script>
+</div>
+
+<h2>Compute numerical syzygies of a general ideal of points</h2>
+
+The following code generates a list of thirdteen points randomly in complex projective three-space.  We verify numerically that there is no second syzygy of degree 5 on the ideal of these points.
+
+<div class="compute"><script type="text/x-sage">
+C = ComplexField(128);
+ComplexNumber = C;
+POINTS=[[C.random_element() for i in range(4)] for j in range(13)]    
+</script>
+</div>
+
+Next we get the cubic polynomials that vanish at these points.
+
+<div class="compute"><script type="text/x-sage">
+vrs=var('w,x,y,z')
+ord=[0 for p in POINTS] #we do not require higher order of vanishing
+CUBS=fat_ideal(3,ord,POINTS,vrs=vrs); #get cubic polynomials that vanish at POINTS, recorded as a matrix
+PolyList=[CUBS[i,0] for i in range(CUBS.nrows())]; #convert CUBS into a list
+</script>
+</div>
+
+The following code produces the linear syzygies on these cubics (numerically, up to the tolerance set by "tol").  There should be six linear syzygies, recorded as the columns of a 7x6 matrix, as expected for a collection of 13 general points.
+
+<div class="compute"><script type="text/x-sage">
+deg=4 #Looking for linear syzygies on cubics, so these have degree 4 (as syzygies)
+DegreeDeficits=[1 for p in PolyList] #the actual degree of the polynomial in the syzygy matrix (these are all linear)
+SYZ1=num_syz(PolyList,DegreeDeficits,deg,vrs,as_poly=true,tol=10^(-12)) #the syzygy matrix
+</script>
+</div>
+
+As a reality check, we verify that the columns of SYZ1 are indeed syzygies on PolyList.
+
+<div class="compute"><script type="text/x-sage">
+PR=transpose(CUBS)*SYZ1
+H.<w,x,y,z>=C[]
+max([[max([norm(c) for c in H(PR[i,j]).coefficients()]) for i in range(PR.nrows())] for j in range(PR.ncols())])
+</script>
+</div>
+
+The following code produces the linear syzygies on the matrix SYZ1 (numerically, up to the tolerance set by "tol").  These are the second syzygies of degree 5.  For a general set of thirteen points, there will not be any such syzygies.
+
+<div class="compute"><script type="text/x-sage">
+DegreeDeficits2=[1 for i in range(6)] #Looking for linear syzygies on SYZ1
+row_degs=[2 for i in range(SYZ1.nrows())] #Entries of SYZ1 have degree one, and we are looking for linear syzygies, so the target degree is two
+SYZ2=num_syz_matrix(SYZ1,DegreeDeficits2,row_degs,vrs,as_poly=true,tol=10^(-12))
+SYZ2
+</script>
+</div>
+
+<h2>Compute numerical syzygies of an ideal of points on an elliptic quintic curve </h2>
+
+The following line records a list of points that have been sampled from an elliptic quintic curve using Bertini.  We verify numerically that there is a second syzygy of degree 5 on the ideal of these points.
+
+<div class="compute"><script type="text/x-sage">
+    POINTS = [[-0.11645572611121879358364594736 - 7.9797279894933126342948526144e-17*I, -0.00075218448249108715679411840682 - 8.4838819996990721961083181668e-18*I, 0.019024374318884429424514337370 + 7.8062556418956319248536601663e-18*I, 1.0000000000000000000000000000], [0.43819150426769398753990003570 - 0.73536958039856525903843476044*I, -0.41948490579605801631402073326 + 0.066358378562056688498849155167*I, 1.0000000000000000000000000000, -0.22830067077770718753093603937 + 0.052726518030427230177004105371*I], [0.16850207468182870629291869591 + 0.14167801323393539036921140450*I, -0.22780101238866490298562439420 - 0.49635380982307641950512788753*I, 1.0000000000000000000000000000, -0.23144340394966450569214089228 + 0.13697290932160050003218998427*I], [0.43819150426769387651759757318 + 0.73536958039856437086001506032*I, -0.41948490579605768324711334571 - 0.066358378562056716254424770796*I, 1.0000000000000000000000000000, -0.22830067077770710426420919248 - 0.052726518030427077521338219412*I], [1.0000000000000000000000000000, 0.31397454810480157627594621772 + 1.3877787807814459836783306871e-17*I, -0.58401353178978798741383116067 - 2.7755575615628910429102880683e-17*I, -0.082132290369764535120644666222 + 2.7755575615628910429102880683e-17*I], [0.033539743551930442655439890132 - 0.20557820150169159312270039663*I, 0.31204899654355661153815049147 - 0.023686961229021280539441818291*I, -0.29204964111683462402169197958 - 0.0026565899077061060247484380881*I, 1.0000000000000000000000000000], [-0.054143293468753177222207995101 - 1.0408340855860839484983635869e-17*I, 1.0000000000000000000000000000, -0.56454507145423182823407159958 - 1.1102230246251570334616974312e-16*I, -0.12673372756245540604602695112], [1.0000000000000000000000000000, -0.087496974572516761359253223418 - 1.9949319973733278504249220516e-17*I, -0.73940009862048683419999406397 + 4.7184478546569152968004345894e-16*I, -0.94799877274153110384702358715 + 2.2204460492503130808472633362e-16*I], [-0.94150149145684303153558403210 - 5.5511151231257827021181583405e-17*I, 0.17668993556751891316203284532 - 4.1633363423443370265886187553e-17*I, -0.90196486500430839150510564650 - 1.1102230246251570334616974312e-16*I, 1.0000000000000000000000000000], [1.0000000000000000000000000000, 0.040116023754417702573693560453 + 0.087051655031606500756424793508*I, -0.12326354486904439466954386262 - 0.079311202584282550209771045502*I, -0.30415056677540397434000851717 + 0.0043368509981095981764553926041*I], [1.0000000000000000000000000000, 0.040116023754417667879224040917 - 0.087051655031606542389788216951*I, -0.12326354486904439466954386262 + 0.079311202584282591843134468945*I, -0.30415056677540397434000851717 - 0.0043368509981096120542432004186*I], [0.033539743551930067955169079141 + 0.20557820150169109352233931531*I, 0.31204899654355661153815049147 + 0.023686961229021228497737538987*I, -0.29204964111683462402169197958 + 0.0026565899077061190351745079141*I, 1.0000000000000000000000000000], [0.16850207468182870629291869591 - 0.14167801323393539036921140450*I, -0.22780101238866509727465370361 + 0.49635380982307641950512788753*I, 1.0000000000000000000000000000, -0.23144340394966458895886773917 - 0.13697290932160050003218998427*I]];
+</script>
+</div>
+
+Next we get the cubic polynomials that vanish at these points.
+
+<div class="compute"><script type="text/x-sage">
+vrs=var('w,x,y,z')
+ord=[0 for p in POINTS] #we do not require higher order of vanishing
+CUBS=fat_ideal(3,ord,POINTS,vrs=vrs); #get cubic polynomials that vanish at POINTS, recorded as a matrix with a single column
+PolyList=[CUBS[i,0] for i in range(CUBS.nrows())]; #convert CUBS into a list
+</script>
+</div>
+
+The following code produces the linear syzygies on these cubics (numerically, up to the tolerance set by "tol").  This should be 7x6 matrix whose columns are the linear syzygies, the same as it is for a general set of points.
+
+<div class="compute"><script type="text/x-sage">
+deg=4 #Looking for linear syzygies on cubics, so these have degree 4 (as syzygies)
+DegreeDeficits=[1 for p in PolyList] #the actual degree of the polynomial in the syzygy matrix (these are all linear)
+SYZ1=num_syz(PolyList,DegreeDeficits,deg,vrs,as_poly=true,tol=10^(-12)) #the syzygy matrix
+</script>
+</div>
+
+As a reality check, we verify that the columns of SYZ1 are indeed syzygies on PolyList.
+
+<div class="compute"><script type="text/x-sage">
+PR=transpose(CUBS)*SYZ1
+H.<w,x,y,z>=C[]
+max([[max([norm(c) for c in H(PR[i,j]).coefficients()]) for i in range(PR.nrows())] for j in range(PR.ncols())])
+</script>
+</div>
+
+The following code produces the linear syzygies on the matrix SYZ1 (numerically, up to the tolerance set by "tol").  These are the second syzygies of degree 5.  For a general set of thirteen points, there will not be any such syzygies.
+
+<div class="compute"><script type="text/x-sage">
+DegreeDeficits2=[1 for i in range(6)] #Looking for linear syzygies on SYZ1
+row_degs=[2 for i in range(SYZ1.nrows())]
+SYZ2=num_syz_matrix(SYZ1,DegreeDeficits2,row_degs,vrs,as_poly=true,tol=10^(-12))
+SYZ2.ncols()
+</script>
+</div>
+
+As a reality check, we verify that the columns of SYZ2 are indeed syzygies on the columns of SYZ1.
+
+<div class="compute"><script type="text/x-sage">
+PR=SYZ1*SYZ2
+H.<w,x,y,z>=C[]
+max([[max([norm(c) for c in H(PR[i,j]).coefficients()]) for i in range(PR.nrows())] for j in range(PR.ncols())])
+</script>
+</div>
+    
+<h2>Your own computations</h2>
+Type your own Sage computation below and click “Evaluate”.
+    <div class="compute"><script type="text/x-sage">plot(sin(x), (x, 0, 2*pi))</script></div>
+    <div class="compute"><script type="text/x-sage">
+@interact
+def f(n=(0,10)):
+    print(2^n)
+</script></div>
+  </body>
+</html>
