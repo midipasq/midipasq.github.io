@@ -1,0 +1,43 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>SageMathCell</title>
+    <script src="https://sagecell.sagemath.org/static/embedded_sagecell.js"></script>
+    <script>
+    // Make the div with id 'mycell' a Sage cell
+    sagecell.makeSagecell({inputLocation:  '#mycell',
+                           hide: ['editor'],
+                           evalButtonText: 'Evaluate',
+			   linked: true,
+			   linkKey: "linkcell"});
+    // Make *any* div with class 'compute' a Sage cell
+    sagecell.makeSagecell({inputLocation: 'div.compute',
+                           evalButtonText: 'Evaluate',
+			   linked: true,
+			   linkKey: "linkcell"});
+    </script>
+  </head>
+  <body>
+  <h1>Numerical Jacobian Algorithm</h1>
+
+  Thirteen general points in complex projective 3-space will not lie on an aCM sextic of genus three, but this cannot be detected from the graded betti numbers of a minimal free resolution. In Section 6 of our paper, we outline an algorithm which we call the 'Jacobian algorithm' which can verify that a given collection of points do not lie on a curve of a particular degree and genus.  We illustrate the numerical implementation of this algorithm.
+
+We will work with high precision real and complex fields throughout.
+<div class="compute"><script type="text/x-sage">
+# Set the default real and complex fields globally to 128 bits
+R = RealField(128)
+C = ComplexField(128)
+
+# Overwrite global number representations
+RealNumber = R
+ComplexNumber = C
+</script>
+</div>
+
+  <h2> Using Jacobian algorithm to verify that thirteen general points do not lie on an aCM sextic of genus three </h2>
+
+
+
+  

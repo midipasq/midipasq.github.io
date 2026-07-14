@@ -317,6 +317,6 @@ As a reality check, we verify that the columns of SYZ2 are indeed syzygies on th
 <div class="compute"><script type="text/x-sage">
 PR=SYZ1*SYZ2
 H.<w,x,y,z>=C[]
-max([[max([norm(c) for c in H(PR[i,j]).coefficients()]) for i in range(PR.nrows())] for j in range(PR.ncols())])
+max(flatten([[max([norm(c) for c in H(PR[i,j]).coefficients()]) for i in range(PR.nrows())] for j in range(PR.ncols())]))
 </script>
 </div>
