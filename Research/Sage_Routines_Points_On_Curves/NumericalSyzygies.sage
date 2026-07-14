@@ -1,28 +1,3 @@
-<!DOCTYPE HTML>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width">
-    <title>SageMathCell</title>
-    <script src="https://sagecell.sagemath.org/static/embedded_sagecell.js"></script>
-    <script>
-    // Make the div with id 'mycell' a Sage cell
-    sagecell.makeSagecell({inputLocation:  '.mycell',
-                           hide: ['editor'],
-                           evalButtonText: 'Evaluate'});
-    // Make *any* div with class 'compute' a Sage cell
-    sagecell.makeSagecell({inputLocation: 'div.compute',
-                           evalButtonText: 'Evaluate'});
-    </script>
-  </head>
-  <body>
-  <h1>Numerically verify that a set of thirteen points is not on an integral quintic curve of genus one</h1>
-
-
-<h2>Load functions to compute Numerical Syzygies</h2>
-Click the "Evaluate" button below to define the functions in the file <a href="NumericalSyzygies.sage"> NumericalSyzygies.sage </a> .
-  
-<div id="mycell"><script type="text/x-sage">
 #Get fat point ideals in various degrees
 
 #Take the derivative of a monomial x^a with respect to y^b and evaluate at a point p
@@ -204,27 +179,3 @@ def num_syz_matrix(PolyMat,DegreeDeficits,row_degs,vrs,tol=10^(-12),as_poly=true
         return(rel_to_poly(num_ker,DegreeDeficits,vrs))
     else:
         return(num_ker)
-
-</script>
-</div>
-  
- <h2>Compute numerical syzygies of an ideal of points </h2>
- Click the “Activate” button below to calculate factorials.
-
-<div class="compute"><script type="text/x-sage">
-@interact
-def _(a=(1, 10)):
-    print(factorial(a))
- </script>
-</div>
-
-<h2>Your own computations</h2>
-Type your own Sage computation below and click “Evaluate”.
-    <div class="compute"><script type="text/x-sage">plot(sin(x), (x, 0, 2*pi))</script></div>
-    <div class="compute"><script type="text/x-sage">
-@interact
-def f(n=(0,10)):
-    print(2^n)
-</script></div>
-  </body>
-</html>
