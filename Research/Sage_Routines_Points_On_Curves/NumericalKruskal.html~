@@ -1,0 +1,17 @@
+<html>
+<body bgcolor="#FFFFFF">
+
+<b><font face="Arial, Helvetica, sans-serif" size="4"> Numerically verify maximal Kruskal ranks  </b>
+<br><br>
+
+<script src="https://sagecell.sagemath.org/static/embedded_sagecell.js"></script>
+<script>sagecell.makeSagecell({"inputLocation": ".sage"});</script>
+
+<h2>Factorial</h2>
+  Click the “Activate” button below to calculate factorials.
+    <div id="sage"><script type="text/x-sage">
+@interact
+def _(a=(1, 10)):
+    print(factorial(a))
+ </script>
+</div>

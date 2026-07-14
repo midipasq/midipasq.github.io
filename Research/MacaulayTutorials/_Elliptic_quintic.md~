@@ -1,0 +1,33 @@
+# Testing if a set of space points lies on an elliptic quintic
+## Significance of the elliptic quintic
+
+Let $A \subset \mathbb{P}^n$ be a collection of points.  Suppose $F$ is a homogeneous form of degree $d$ in $S=\mathbb{C}[x_0,\ldots,x_n]$ and $F=\sum_{p \in A} L_p^d$ (we say $A$ computes $F$).  If $A$ consists of thirteen general points in $\mathbb{P}^3$ and $A$ does not lie on an integral quintic curve of degree five and arithmetic genus one, then we show that the Waring rank of $A$ is thirteen.
+
+In our paper, we show that if the defining ideal of $A$ does not have a second syzygy of degree five, then $A$ does not lie on an integral quintic curve of degree five.  We show how to test this property.
+
+## Ideal of a set of points
+
+Here is a short script that creates the ideal of a set of points whose coordinates are given as the rows of a matrix M.
+
+```
+--Inputs:
+--S: the ring to contain the ideal of points, which should have the same number of variables as the coordinates of the points
+--M: a matrix whose rows are coordinates of the points
+
+pointIdea = (S,M)->intersect apply(entries M,r->minors(2,matrix {gens S,r}))
+```
+
+## Verifying a set of thirteen points does not lie on an elliptic quintic
+
+The running example in the section 6 of our paper is given by the columns of 
+```
+M=matrix {{2, 4, 0, 3, 5, 2, 1, 9, 4, 7, 6, 5, 5}, {9, 9, 1, 5, 3, 7, 2, 3, 5, 8, 2, 7, 1}, {4, 8, 6, 1, 0, 8, 6, 2, 8, 8, 4, 2, 2}, {0, 9, 1, 5, 5, 1, 6, 2, 3, 4, 0, 5, 7}}
+```
+
+The following code produces the betti table of the ideal of the set of points given by the columns of M:
+```
+S=QQ[w,x,y,z];
+I=pointIdeal(transpose M); --use the script we created on the previous page
+betti res image gens I
+```
+Observe from the betti table of $I$ that $I$ does not have a second syzygy of degree five, and therefore the columns of $M$ do not lie on an elliptic quintic.
