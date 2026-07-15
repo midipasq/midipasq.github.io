@@ -1,0 +1,34 @@
+# Verifying that a given list of polynomials defines an elliptic quintic
+## Verifying that a given list of polynomials defines an elliptic quintic
+
+We verify that the following ideal defines a smooth curve in \(\mathbb{P}^4\) of degree $5$ and genus $1$.
+
+```
+I=ideal(75*x^2*y+375*w*y^2-w*x*z+3*z^3,45*x^3+225*w*x*y+3*w^2*z-y*z^2,3*w*x^2+15*w^2*y-5*y^2*z-9*x*z^2,w^2*x-125*y^3-225*x*y*z-3*w*z^2,3*w^3+75*x*y^2+135*x^2*z-w*y*z)
+```
+
+First we verify that $I$ defines a curve.
+
+```
+isPrime(I)
+```
+
+```
+codim(I) --should be two to define a curve in P^3
+```
+
+We now verify that the degree and genus are correct.
+
+```
+genus(I) --should be one
+```
+
+```
+degree(I) --should be five
+```
+
+Finally we verify that I defines a smooth variety.
+
+```
+isSmooth(I)
+```
