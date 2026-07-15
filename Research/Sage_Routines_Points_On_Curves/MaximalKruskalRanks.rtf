@@ -1,0 +1,53 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2870
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\margl1440\margr1440\vieww19660\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 #Define the Veronese map for verifying general position of a collection of points\
+def veronese(U,d):\
+    return([product([U[i]^(c[i]) for i in range(len(U))]) for c in IntegerVectors(d,len(U))])\
+\
+#Verify that a collection of points has maximal Kruskal ranks\
+def maximal_Kruskal_ranks(P,tol=10^(-12)):\
+    npt = len(P);\
+    dim = len(P[0]);\
+    MAT = matrix(CDF,P);\
+    #get the smallest degree d so that P can impose independent conditions on forms of degree d\
+    mxk = 0;\
+    while binomial(dim-1+mxk,dim-1)< npt:\
+        mxk = mxk+1\
+    #npt is less than or equal to binomial(dim-1+mxk,dim-1)\
+    #If there is only one point, it has maximal Kruskal ranks if and only if it is nonzero\
+    if mxk == 0:\
+        if P[0] == [0 for i in range(dim)]:\
+            return((False, "No non-zero points"))\
+        else:\
+            return True\
+    d = 1;\
+    INDX = set(range(npt));\
+    while d<mxk:\
+        AVER = [veronese(pt,d) for pt in P];\
+        MAT = matrix(CDF,AVER);\
+        k = MAT.ncols();\
+        SBS=[list(s) for s in Subsets(INDX,k)];\
+        i = 0;\
+        while i in range(len(SBS)):\
+            A = MAT.matrix_from_rows_and_columns(SBS[i],range(k));\
+            U, Sigma, V_dagger = A.SVD();\
+            sing_vals = [Sigma[i,i] for i in range(k)];\
+            rk = len([s for s in sing_vals if s>tol]);\
+            if rk<k:\
+                return((False,"Subset "+str(SBS[i])+" does not impose independent conditions on forms of degree "+str(d)))\
+            i = i+1\
+        d=d+1\
+    AVER = [veronese(pt,d) for pt in P];\
+    MAT = matrix(CDF,AVER);\
+    U, Sigma, V_dagger = MAT.SVD();\
+    sing_vals = [Sigma[i,i] for i in range(npt)];\
+    rk = len([s for s in sing_vals if s>tol]);\
+    if rk<npt:\
+        return((False,"Points do not impose independent conditions on forms of degree "+str(d)))\
+    else:\
+        return True}

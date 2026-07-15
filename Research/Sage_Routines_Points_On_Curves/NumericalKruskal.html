@@ -7,7 +7,7 @@
     <script src="https://sagecell.sagemath.org/static/embedded_sagecell.js"></script>
     <script>
     // Make the div with id 'mycell' a Sage cell
-    sagecell.makeSagecell({inputLocation:  '#mycell',
+    sagecell.makeSagecell({inputLocation:  'div.hide',
                            hide: ['editor'],
                            evalButtonText: 'Evaluate',
 			   linked: true,
@@ -21,14 +21,12 @@
   </head>
   <body>
     <h1>Maximal Kruskal ranks</h1>
-    
+    A set of points has maximal Kruskal ranks if every subset imposes the maximum number of conditions on forms of degree d for all d.
 
+    <h2>Load functions to verify maximal Kruskal ranks</h2>
+    Click the "Evaluate" button below to define the functions in the file <a href="MaximalKruskalRanks.rtf"> MaximalKruskalRanks </a>.
 
-
-
-
-
-
+<div class="hide"><script type="text/x-sage">	
 #Define the Veronese map for verifying general position of a collection of points
 def veronese(U,d):
     return([product([U[i]^(c[i]) for i in range(len(U))]) for c in IntegerVectors(d,len(U))])
@@ -75,3 +73,37 @@ def maximal_Kruskal_ranks(P,tol=10^(-12)):
         return((False,"Points do not impose independent conditions on forms of degree "+str(d)))
     else:
         return True
+
+#Print that the functions have loaded successfully
+print("Successfully loaded functions from MaximalKruskalRanks")
+
+</script>
+</div>
+
+<h2> Numerically verify that a general set of thirteen points has maximal Kruskal ranks </h2>
+
+The following code generates a list of thirdteen points randomly in complex projective three-space.
+
+<div class="compute"><script type="text/x-sage">
+C = ComplexField(128);
+ComplexNumber = C;
+POINTS=[[C.random_element() for i in range(4)] for j in range(13)]    
+</script>
+</div>
+
+Let's verify that these have maximal Kruskal ranks.
+
+<div class="compute"><script type="text/x-sage">
+maximal_Kruskal_ranks(POINTS)
+</script>
+</div>
+
+<h2> An example that does not have maximal Kruskal ranks </h2>
+
+The following collection of points has a subset of ten points that fails to impose independent conditions on quadrics.
+
+<div class="compute"><script type="text/x-sage">
+POINTS=[[3,4,5,2],[2,0,1,4],[-3,4,5,7],[3,-4,5,5],[-3,-4,5,17],[2,-7,5,2],[5,12,13,4],[-5,12,13,7],[5,-12,13,21],[-5,-12,13,23],[7,24,25,1],[-7,24,25,11],[1,2,3,4]];
+maximal_Kruskal_ranks(POINTS)
+</script>
+</div>

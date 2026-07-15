@@ -7,7 +7,7 @@
     <script src="https://sagecell.sagemath.org/static/embedded_sagecell.js"></script>
     <script>
     // Make the div with id 'mycell' a Sage cell
-    sagecell.makeSagecell({inputLocation:  '#mycell',
+    sagecell.makeSagecell({inputLocation:  'div.hide',
                            hide: ['editor'],
                            evalButtonText: 'Evaluate',
 			   linked: true,
@@ -36,8 +36,280 @@ ComplexNumber = C
 </script>
 </div>
 
-  <h2> Using Jacobian algorithm to verify that thirteen general points do not lie on an aCM sextic of genus three </h2>
+For the reasoning behind the setup of the Jacobian algorithm, please refer to Section 6 of our paper or the tutorial <a href="https://macaulay2.math.gatech.edu/#tutorial-_Jacobian_Algorithm-4"> Jacobian Algorithm (Algorithm 3) </a>.  The explanations here will mostly be targeted to the adaptations necessary to handle numerical instead of symbolic input.
 
+<h2>Load functions to verify maximal Kruskal ranks</h2>
+    Click the "Evaluate" button below to define the functions in the file <a href="MaximalKruskalRanks.rtf"> MaximalKruskalRanks </a>.
 
+<div class="hide"><script type="text/x-sage">	
+#Define the Veronese map for verifying general position of a collection of points
+def veronese(U,d):
+    return([product([U[i]^(c[i]) for i in range(len(U))]) for c in IntegerVectors(d,len(U))])
 
+#Verify that a collection of points has maximal Kruskal ranks
+def maximal_Kruskal_ranks(P,tol=10^(-12)):
+    npt = len(P);
+    dim = len(P[0]);
+    MAT = matrix(CDF,P);
+    #get the smallest degree d so that P can impose independent conditions on forms of degree d
+    mxk = 0;
+    while binomial(dim-1+mxk,dim-1)< npt:
+        mxk = mxk+1
+    #npt is less than or equal to binomial(dim-1+mxk,dim-1)
+    #If there is only one point, it has maximal Kruskal ranks if and only if it is nonzero
+    if mxk == 0:
+        if P[0] == [0 for i in range(dim)]:
+            return((False, "No non-zero points"))
+        else:
+            return True
+    d = 1;
+    INDX = set(range(npt));
+    while d<mxk:
+        AVER = [veronese(pt,d) for pt in P];
+        MAT = matrix(CDF,AVER);
+        k = MAT.ncols();
+        SBS=[list(s) for s in Subsets(INDX,k)];
+        i = 0;
+        while i in range(len(SBS)):
+            A = MAT.matrix_from_rows_and_columns(SBS[i],range(k));
+            U, Sigma, V_dagger = A.SVD();
+            sing_vals = [Sigma[i,i] for i in range(k)];
+            rk = len([s for s in sing_vals if s>tol]);
+            if rk<k:
+                return((False,"Subset "+str(SBS[i])+" does not impose independent conditions on forms of degree "+str(d)))
+            i = i+1
+        d=d+1
+    AVER = [veronese(pt,d) for pt in P];
+    MAT = matrix(CDF,AVER);
+    U, Sigma, V_dagger = MAT.SVD();
+    sing_vals = [Sigma[i,i] for i in range(npt)];
+    rk = len([s for s in sing_vals if s>tol]);
+    if rk<npt:
+        return((False,"Points do not impose independent conditions on forms of degree "+str(d)))
+    else:
+        return True
+
+#Print that the functions have loaded successfully
+print("Successfully loaded functions from MaximalKruskalRanks")
+
+</script>
+</div>
+
+<h2>Load functions to compute Numerical Syzygies</h2>
+Click the "Evaluate" button below to define the functions in the file <a href="NumericalSyzygies.rtf"> NumericalSyzygies </a> .
   
+<div class="hide"><script type="text/x-sage">
+#Get fat point ideals in various degrees
+
+#Take the derivative of a monomial x^a with respect to y^b and evaluate at a point p
+def monomial_derivative_evaluation(a,b,p):
+    a = vector(a);
+    b = vector(b);
+    d = a-b;
+    neg_c = false;
+    ind = 0;
+    while not neg_c and ind<len(d):
+        if d[ind]<0:
+            neg_c = true
+        ind = ind+1
+    if neg_c:
+        return(0)
+    else:
+        return(product([factorial(a[i])/factorial(a[i]-b[i])*p[i]^(d[i]) for i in range(0,len(a))]))
+        
+#Matrix whose kernel consists of all polynomials of degree deg which vanish to order ord at points in ptlist
+def fat_matrix(deg,ord,ptlist):
+    num_vars = len(ptlist[0]);
+    monexp = IntegerVectors(deg,num_vars);
+    mat_rows = [];
+    for i in range(0,len(ptlist)):
+        p = ptlist[i];
+        deriv_mons = IntegerVectors(ord[i],num_vars);
+        for m in deriv_mons:
+            mat_rows=mat_rows+[[monomial_derivative_evaluation(n,m,p) for n in monexp]];
+    return(matrix(mat_rows))
+                    
+#Take matrix with columns consisting of coefficients and turn it into polynomials
+def vec_to_poly(coeff,deg,vrs,row=true):
+    BS = matrix([[product([(vrs[i])^(a[i]) for i in range(0,len(a))]) for a in IntegerVectors(deg,len(vrs))]]);
+    if coeff.nrows()==0 or coeff.ncols()==0:
+        return(0)
+    if row:
+        return(coeff*(BS.transpose()))
+    else:
+        return(BS*coeff)
+
+#Basis for polynomials of degree deg that vanish to order ord at points in ptlist
+def fat_ideal(deg,ord,ptlist,vrs=None,poly_form=true):
+    FM = fat_matrix(deg,ord,ptlist);
+    K = matrix((fat_matrix(deg,ord,ptlist)).right_kernel().basis());
+    if poly_form:
+        return(vec_to_poly(K,deg,vrs))
+    else:
+        return(K)
+
+
+###The following is a number of commands that allow the computation of (numerical) syzygies.
+###The computations rely on passing completely into the realm of linear algebra and using SVD to approximate rank
+
+#monomial exponentiation
+def monexp(vrs,expn):
+    return(product([v[0]^(v[1]) for v in zip(vrs,expn)]))
+    
+#Get basis for polynomials homogeneous of degree d
+def poly_basis(deg,vrs):
+    num=len(vrs);
+    basisvecs = [list(m) for m in IntegerVectors(deg,num)];
+    return([monexp(vrs,expn) for expn in basisvecs])
+
+#get coefficients of polynomial in preferred order
+def coeffs(F,basis):
+    return([F.coefficient(m) for m in basis])
+
+#Given a matrix of polynomials, convert each polynomial entry into a coefficient vector (column)
+def coeffs_mat(M,Degs,vrs):
+    return(block_matrix([[matrix(zip(*[coeffs(M[i,j],poly_basis(Degs[i,j],vrs)) for j in range(0,M.ncols())]))] for i in range(0,M.nrows())]))
+
+#Given a list with polynomial entries, return a list of those polynomials multiplied by all monomials of a given degree (degree may vary for each polynomial)
+def mon_mult(PolyList,DegreeDeficits,vrs):
+    return(flatten([[expand(m*PolyList[i]) for m in poly_basis(DegreeDeficits[i],vrs)] for i in range(0,len(PolyList))]))
+
+#Given a matrix with polynomial entries, return a matrix whose rows are multiplied by all monomials of a given degree (output of previous function)
+def mon_mult_matrix(PolyMat,DegreeDeficits,vrs):
+    return(matrix([mon_mult(rw,DegreeDeficits,vrs) for rw in PolyMat.rows()]))
+
+#Index selection functions
+def ind_select_less(L,tol):
+    iList = [i for i,x in enumerate(L) if x<tol]
+    if len(iList)==0:
+        return(len(L))
+    else:
+        return(iList[0])
+
+#def ind_select_greater(L,tol):
+#    return([i for i,x in enumerate(L) if x>tol])
+
+#Convert a matrix of coefficients (assumed column vectors) back into a matrix of polynomials
+def coeff_to_poly(cfMat,Degs,vrs):
+    pMat = [];
+    for c in range(0,cfMat.ncols()):
+        indx = 0;
+        pCol = [];
+        for cnt in range(0,Degs.nrows()):
+            mns = poly_basis(Degs[cnt,c],vrs);
+            cntln = len(mns);
+            poly=0;
+            for incnt in range(0,cntln):
+                poly = poly+vec[indx]*mns[incnt];
+                indx = indx+1;
+            pCol=pCol+[poly];
+        pMat = pMat+[pCol];
+    return(transpose(matrix(pMat)))
+
+#Convert a column relation back into a polynomial relation, given DegreeDeficits
+def rel_to_poly(rMat,DegreeDeficits,vrs):
+        relMat = [];
+        for vec in rMat.columns():
+            indx = 0;
+            relCol = [];
+            for cnt in range(0,len(DegreeDeficits)):
+                mns = poly_basis(DegreeDeficits[cnt],vrs);
+                cntln = len(mns);
+                poly=0;
+                for incnt in range(0,cntln):
+                    poly = poly+vec[indx]*mns[incnt];
+                    indx = indx+1;
+                relCol=relCol+[poly];
+            relMat=relMat+[relCol];
+        return(transpose(matrix(relMat)))
+
+#NUMERICAL syzygies of a list of homogeneous polynomials in a specific degree
+def num_syz(PolyList,DegreeDeficits,deg,vrs,as_poly=false,tol=10^(-12)):
+    bs = poly_basis(deg,vrs);
+    exp_mons = mon_mult(PolyList,DegreeDeficits,vrs);
+    cfMat = matrix([coeffs(F,bs) for F in exp_mons]);
+    [U,S,V] = cfMat.change_ring(CDF).SVD();
+    mn = min(S.ncols(),S.nrows());
+    singVals = [S[i,i] for i in range(0,mn)];
+    IND = ind_select_less(singVals,tol);
+    num_ker = conjugate(U[range(0,U.nrows()),range(IND,U.ncols())])
+    if as_poly:
+        return(rel_to_poly(num_ker,DegreeDeficits,vrs))
+    else:
+        return(num_ker)
+
+#Numerical intersection of column spaces (same ambient!).  Assumes that matrices have independent columns.
+def num_intersect(L,tol=10^(-10)):
+    #L is a list of matrices; we will return the numerical intersection of the column spaces
+    ocmps = [orth_comp(M) for M in L];
+    return(orth_comp(block_matrix([ocmps]),indep_cols=false,tol=tol))
+
+#Numerical orthogonal complement of a column space with respect to another
+def orth_comp_subspace(MAT1,MAT2,tol=10^(-12)):
+    #Take orthogonal complement of col(MAT2) with respect to col(MAT1)
+    [U1,S1,V1] = MAT1.change_ring(CDF).SVD();
+    mn1 = min(S1.ncols(),S1.nrows());
+    singVals1 = [S1[i,i] for i in range(0,mn1)];
+    IND1 = ind_select_less(singVals1,tol);
+    O1 = U1[range(0,U1.nrows()),range(0,IND1)];
+    ProjM = O1*(O1.conjugate_transpose());
+    ID = matrix.identity(ProjM.ncols());
+    Orth1 = (ID-ProjM)*MAT2;
+    [U,S,V] = Orth1.change_ring(CDF).SVD();
+    mn = min(S.ncols(),S.nrows());
+    singVals = [S[i,i] for i in range(0,mn)];
+    IND = ind_select_less(singVals,tol);
+    return(U[range(0,U.nrows()),range(0,IND)])
+
+#Numerical orthogonal complement of column space
+def orth_comp(MAT,indep_cols=true,tol=10^(-12)):
+    [U,S,V] = MAT.change_ring(CDF).SVD();
+    if indep_cols:
+        r = MAT.ncols();
+        return( (U[range(0,U.nrows()),range(r,U.ncols())]).conjugate())
+    else:
+        singVals = [S[i,i] for i in range(0,min(S.ncols(),S.nrows()))];
+        IND = ind_select_less(singVals,tol);
+        return((U[range(0,U.nrows()),range(IND,U.ncols())]).conjugate())            
+        
+#NUMERICAL syzygies of a matrix of polynomials with homogeneous entries
+def num_syz_matrix(PolyMat,DegreeDeficits,row_degs,vrs,tol=10^(-12),as_poly=true):
+    row_kers = [num_syz(list(PolyMat.row(i)),DegreeDeficits,row_degs[i],vrs,tol=tol) for i in range(0,PolyMat.nrows())];
+    num_ker=num_intersect(row_kers,tol=tol)
+    if as_poly:
+        return(rel_to_poly(num_ker,DegreeDeficits,vrs))
+    else:
+        return(num_ker)
+
+#Print that the functions have loaded successfully
+print("Successfully loaded functions from NumericalSyzygies")
+
+</script>
+</div>
+
+<h2> Using Jacobian algorithm to verify that thirteen general points do not lie on an aCM sextic of genus three </h2>
+
+The following code generates a list of thirdteen points randomly in complex projective three-space.  We verify numerically that there is no integral aCM sextic curve of genus three containing these points.
+
+<div class="compute"><script type="text/x-sage">
+C = ComplexField(128);
+ComplexNumber = C;
+POINTS=[[C.random_element() for i in range(4)] for j in range(13)]
+maximal_Kruskal_ranks(POINTS) #Verify that the set of points has maximal Kruskal ranks
+</script>
+</div>
+
+
+ 
+
+ 
+  <h2> Jacobian algorithm fails for thirteen points sampled from an aCM sextic curve of genus three </h2>
+
+  The following line records a list of points that have been sampled from an aCM sextic curve of genus three using Bertini.  We verify numerically that there is a solution to the equations coming out of the Jacobian algorithm, meaning that the algorithm fails to verify that the points do not lie on an aCM sextic curve of genus three (as expected).
+
+  <div class="compute"><script type="text/x-sage">
+      POINTS=[[0.96007593041788052002382348555215373922 + 0.43154273425965116445180229931561669985*I, 0.16070355745169437766083405879743629499 + 0.053551442827168840960076613674075646615*I, 0.51312522179511303131025866086822761559 + 0.18708390267153494096061820174970994746*I, 0.044710348224423828439517600228719400606 + 0.021534636628768664909917754358222590276*I], [1.1546445761549564760926692225946649939 + 0.79592156307361192278832357783855564006*I, 0.38681112358337380967655128973981784680 + 0.19379602799496672470273450659746571950*I, 1.3687121724600195189806474467550951036 - 0.044998723886047668331949144925879624294*I, 0.042246141482334464746842980129637127985 - 0.12841754146137539109522933985534623832*I], [0.29425705297385242360654057790327567653 - 0.0024818876396751530793564374361317264715*I, 0.13683001784542074120354620333126757465 - 0.067803094765189374449398603438616881025*I, 0.23084696375374420494269397391516169541 + 0.69984771051237765640520045597969524068*I, -0.12698054069594500141084544887785157719 + 0.31114620545312021903614142495288288068*I], [1.0718295930788715960460022218701564309 + 0.56865333443605898781145156990401474351*I, 0.33239487952137398910567605896570466781 + 0.084147159622945582979423264748689902684*I, 0.96525763038040227969127967700162385043 - 0.073514751900133389484135166563807337121*I, 0.010406203319968251642859442049470369212 - 0.038698701288497553269765635815492118534*I], [1.0340652856232914349360248972181575417 + 0.25938381696579185243737842472585486464*I, 0.15206260164933559127319374939781197950 + 0.15723930165432707319627714302434970032*I, 0.40739157553630685784023775527734996218 + 0.34278195478940402228374404910040365796*I, 0.047539984540436460473033728789667301243 - 0.011281762661040833541747122882622541928*I], [0.80689819975447950145306970874222481038 - 0.10907167416064131835983712324577955226*I, 0.31343776281745558167732513259468557852 + 0.090770118740881135553361095644175311661*I, 0.33185451706991297643414479032984851081 + 0.47424518528057339226845625017595767551*I, -0.12680448386173774990202874053669429761 - 0.060918800812377127880390916601284195032*I], [0.14169534772464404579034633413901020689 + 0.085710742939120773230894210845813304384*I, 0.053672382767608548729748233308999379845 - 0.060079177393096570617558826965226292936*I, 0.17832698570511386569460829001384113164 + 0.86495398586059502216036751060876020070*I, -0.016372816763786265637737905510450627868 + 0.38372762421209292040527013658744482177*I], [0.86704554720059944438669651878404327477 - 0.092083297194031846294175266829200594011*I, 0.31040957655016823262399067088715557001 + 0.12062083566144168735887338002029475325*I, 0.33809675382835714042504025007280044526 + 0.45587644659860017047424053692222752170*I, -0.094418040251606859265073189566842009567 - 0.079570563421021205119809161235266550128*I], [-0.22211834354432546911676286789644156365 + 1.0725593406250101000348180203458780661*I, -0.16429246528696253907159634438252411132 + 0.31314447124493045288203374540776620622*I, 0.99944691478984711359271945753276362513 + 1.8553135481745700403178123936430238139*I, 0.50270810031421711064226178261690210742 + 0.23314963552974127704821810163040712058*I], [0.98720144103158683263439814243363772101 + 0.47927232840695235492445271540941711204*I, 0.26234682173975770281413639370728295130 + 0.036120836477889750403941689227776603100*I, 0.71766629667217709838637534583816039014 + 0.0082339298246576803508532971747525677127*I, 0.021419774277626715487609933311253534138 + 0.0087630374162692404714629436634681338979*I], [0.16673808321943785434976963561648544287 + 0.069473247916197876785494512934892836813*I, 0.067156606573256611531504568193840291893 - 0.063070742849334959128948341030968436866*I, 0.18422888662220228359834737614699144858 + 0.83317432555526451213069273503718642210*I, -0.034890118900859534287524775760813681125 + 0.37501168515539359354519751274259260845*I], [0.25732522625626406992576659341175262885 + 1.5192674475195102498405371273569267626*I, 0.021439015202192580827477005300329887379 + 0.50639616167686969928523279761932067824*I, 1.8195204842786307713328470331594587015 + 1.5342156019349496122229166980549160094*I, 0.51257153857986025814584401602479787843 - 0.058797392409071755981286989814885639773*I], [0.50133849818731449494755860097270440069 + 0.26854454416733848217272152032587509472*I, 0.22225245511806543763894416255554291068 - 0.24059153474604235850189601716494866019*I, 0.12462984766437893677236718153050177360 - 0.0071142970247007222420504080920977514065*I, 0.15499895269096845274677079950283809775 + 0.18579563800270382126489283916422821193*I]]
+</script>
+</div>
+
+The points 

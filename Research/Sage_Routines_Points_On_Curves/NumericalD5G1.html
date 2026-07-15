@@ -7,7 +7,7 @@
     <script src="https://sagecell.sagemath.org/static/embedded_sagecell.js"></script>
     <script>
     // Make the div with id 'mycell' a Sage cell
-    sagecell.makeSagecell({inputLocation:  '#mycell',
+    sagecell.makeSagecell({inputLocation:  'div.hide',
                            hide: ['editor'],
                            evalButtonText: 'Evaluate',
 			   linked: true,
@@ -22,12 +22,69 @@
   <body>
   <h1>Numerically verify that a set of thirteen points is not on an integral quintic curve of genus one</h1>
 
-The ideal of thirteen general points in complex projective 3-space is defined by seven cubics, with 6 minimal syzygies of degree 4 and 3 of degree 5, and 3 second syzygies of degree 6.  If the thirteen points are on an integral quintic curve of genus one, then there will be a second syzygy of degree 5; the point of Algorithm 2 in Section 6 of our paper is that we can guarantee that a collection of thirteen points does not lie on an integral quintic curve of genus one if its ideal does not have a second syzygy of degree 5.  The following code showcases this result numerically.  In order to produce second syzygies, we use the functions in <a href="NumericalSyzygies.sage"> NumericalSyzygies.sage </a>.  These routines use singular value decomposition and a user-defined tolerance on singular values to produce syzygies of a fixed degree using only linear algebra.
+The ideal of thirteen general points in complex projective 3-space is defined by seven cubics, with 6 minimal syzygies of degree 4 and 3 of degree 5, and 3 second syzygies of degree 6.  If the thirteen points are on an integral quintic curve of genus one, then there will be a second syzygy of degree 5; the point of Algorithm 2 in Section 6 of our paper is that we can guarantee that a collection of thirteen points does not lie on an integral quintic curve of genus one if its ideal does not have a second syzygy of degree 5.  The following code showcases this result numerically.  In order to produce second syzygies, we use the functions in <a href="NumericalSyzygies.rtf"> NumericalSyzygies </a>.  These routines use singular value decomposition and a user-defined tolerance on singular values to produce syzygies of a fixed degree using only linear algebra.
 
-<h2>Load functions to compute Numerical Syzygies</h2>
-Click the "Evaluate" button below to define the functions in the file <a href="NumericalSyzygies.sage"> NumericalSyzygies.sage </a> .
+<h2>Load functions to verify maximal Kruskal ranks</h2>
+Click the "Evaluate" button below to define the functions in the file <a href="MaximalKruskalRanks.rtf"> MaximalKruskalRanks </a>.
+
+<div class="hide"><script type="text/x-sage">	
+#Define the Veronese map for verifying general position of a collection of points
+def veronese(U,d):
+    return([product([U[i]^(c[i]) for i in range(len(U))]) for c in IntegerVectors(d,len(U))])
+
+#Verify that a collection of points has maximal Kruskal ranks
+def maximal_Kruskal_ranks(P,tol=10^(-12)):
+    npt = len(P);
+    dim = len(P[0]);
+    MAT = matrix(CDF,P);
+    #get the smallest degree d so that P can impose independent conditions on forms of degree d
+    mxk = 0;
+    while binomial(dim-1+mxk,dim-1)< npt:
+        mxk = mxk+1
+    #npt is less than or equal to binomial(dim-1+mxk,dim-1)
+    #If there is only one point, it has maximal Kruskal ranks if and only if it is nonzero
+    if mxk == 0:
+        if P[0] == [0 for i in range(dim)]:
+            return((False, "No non-zero points"))
+        else:
+            return True
+    d = 1;
+    INDX = set(range(npt));
+    while d<mxk:
+        AVER = [veronese(pt,d) for pt in P];
+        MAT = matrix(CDF,AVER);
+        k = MAT.ncols();
+        SBS=[list(s) for s in Subsets(INDX,k)];
+        i = 0;
+        while i in range(len(SBS)):
+            A = MAT.matrix_from_rows_and_columns(SBS[i],range(k));
+            U, Sigma, V_dagger = A.SVD();
+            sing_vals = [Sigma[i,i] for i in range(k)];
+            rk = len([s for s in sing_vals if s>tol]);
+            if rk<k:
+                return((False,"Subset "+str(SBS[i])+" does not impose independent conditions on forms of degree "+str(d)))
+            i = i+1
+        d=d+1
+    AVER = [veronese(pt,d) for pt in P];
+    MAT = matrix(CDF,AVER);
+    U, Sigma, V_dagger = MAT.SVD();
+    sing_vals = [Sigma[i,i] for i in range(npt)];
+    rk = len([s for s in sing_vals if s>tol]);
+    if rk<npt:
+        return((False,"Points do not impose independent conditions on forms of degree "+str(d)))
+    else:
+        return True
+
+#Print that the functions have loaded successfully
+print("Successfully loaded functions from MaximalKruskalRanks")
+
+</script>
+</div>
   
-<div id="mycell"><script type="text/x-sage">
+<h2>Load functions to compute Numerical Syzygies</h2>
+Click the "Evaluate" button below to define the functions in the file <a href="NumericalSyzygies.rtf"> NumericalSyzygies </a> .
+  
+<div class="hide"><script type="text/x-sage">
 #Get fat point ideals in various degrees
 
 #Take the derivative of a monomial x^a with respect to y^b and evaluate at a point p
@@ -211,7 +268,7 @@ def num_syz_matrix(PolyMat,DegreeDeficits,row_degs,vrs,tol=10^(-12),as_poly=true
         return(num_ker)
 
 #Print that the functions have loaded successfully
-print("Successfully loaded functions from NumericalSyzygies.sage")
+print("Successfully loaded functions from NumericalSyzygies")
 
 </script>
 </div>
@@ -223,7 +280,8 @@ The following code generates a list of thirdteen points randomly in complex proj
 <div class="compute"><script type="text/x-sage">
 C = ComplexField(128);
 ComplexNumber = C;
-POINTS=[[C.random_element() for i in range(4)] for j in range(13)]    
+POINTS=[[C.random_element() for i in range(4)] for j in range(13)]
+maximal_Kruskal_ranks(POINTS) #Verify that the set of points has maximal Kruskal ranks
 </script>
 </div>
 
@@ -273,6 +331,13 @@ The following line records a list of points that have been sampled from an ellip
     POINTS = [[-0.11645572611121879358364594736 - 7.9797279894933126342948526144e-17*I, -0.00075218448249108715679411840682 - 8.4838819996990721961083181668e-18*I, 0.019024374318884429424514337370 + 7.8062556418956319248536601663e-18*I, 1.0000000000000000000000000000], [0.43819150426769398753990003570 - 0.73536958039856525903843476044*I, -0.41948490579605801631402073326 + 0.066358378562056688498849155167*I, 1.0000000000000000000000000000, -0.22830067077770718753093603937 + 0.052726518030427230177004105371*I], [0.16850207468182870629291869591 + 0.14167801323393539036921140450*I, -0.22780101238866490298562439420 - 0.49635380982307641950512788753*I, 1.0000000000000000000000000000, -0.23144340394966450569214089228 + 0.13697290932160050003218998427*I], [0.43819150426769387651759757318 + 0.73536958039856437086001506032*I, -0.41948490579605768324711334571 - 0.066358378562056716254424770796*I, 1.0000000000000000000000000000, -0.22830067077770710426420919248 - 0.052726518030427077521338219412*I], [1.0000000000000000000000000000, 0.31397454810480157627594621772 + 1.3877787807814459836783306871e-17*I, -0.58401353178978798741383116067 - 2.7755575615628910429102880683e-17*I, -0.082132290369764535120644666222 + 2.7755575615628910429102880683e-17*I], [0.033539743551930442655439890132 - 0.20557820150169159312270039663*I, 0.31204899654355661153815049147 - 0.023686961229021280539441818291*I, -0.29204964111683462402169197958 - 0.0026565899077061060247484380881*I, 1.0000000000000000000000000000], [-0.054143293468753177222207995101 - 1.0408340855860839484983635869e-17*I, 1.0000000000000000000000000000, -0.56454507145423182823407159958 - 1.1102230246251570334616974312e-16*I, -0.12673372756245540604602695112], [1.0000000000000000000000000000, -0.087496974572516761359253223418 - 1.9949319973733278504249220516e-17*I, -0.73940009862048683419999406397 + 4.7184478546569152968004345894e-16*I, -0.94799877274153110384702358715 + 2.2204460492503130808472633362e-16*I], [-0.94150149145684303153558403210 - 5.5511151231257827021181583405e-17*I, 0.17668993556751891316203284532 - 4.1633363423443370265886187553e-17*I, -0.90196486500430839150510564650 - 1.1102230246251570334616974312e-16*I, 1.0000000000000000000000000000], [1.0000000000000000000000000000, 0.040116023754417702573693560453 + 0.087051655031606500756424793508*I, -0.12326354486904439466954386262 - 0.079311202584282550209771045502*I, -0.30415056677540397434000851717 + 0.0043368509981095981764553926041*I], [1.0000000000000000000000000000, 0.040116023754417667879224040917 - 0.087051655031606542389788216951*I, -0.12326354486904439466954386262 + 0.079311202584282591843134468945*I, -0.30415056677540397434000851717 - 0.0043368509981096120542432004186*I], [0.033539743551930067955169079141 + 0.20557820150169109352233931531*I, 0.31204899654355661153815049147 + 0.023686961229021228497737538987*I, -0.29204964111683462402169197958 + 0.0026565899077061190351745079141*I, 1.0000000000000000000000000000], [0.16850207468182870629291869591 - 0.14167801323393539036921140450*I, -0.22780101238866509727465370361 + 0.49635380982307641950512788753*I, 1.0000000000000000000000000000, -0.23144340394966458895886773917 - 0.13697290932160050003218998427*I]];
 </script>
 </div>
+
+Let's verify that these points have maximal Kruskal ranks.
+
+<div class="compute"><script type="text/x-sage">
+maximal_Kruskal_ranks(POINTS)
+</script>
+</div> 
 
 Next we get the cubic polynomials that vanish at these points.
 
