@@ -1,8 +1,0 @@
-# Jacobian Algorithm
-## Idea of the algorithm
-
-Let $A \subset \mathbb{P}^3$ be a collection of points in general position (see the tutorial on Kruskal ranks) and $S=\mathbb{K}[x_0,\cdots,x_3]$ the homogeneous coordinate ring of $\mathbb{P}^n$.  The Jacobian algorithm, which is Algorithm 3 in Section 6 of our paper, gives a criterion to verify that $A$ does not lie on a curve $C$ of a specific degree $d$ and genus $g$.
-
-Let $I_C$ be the ideal of the curve.  The main observation to get the algorithm started is that, since we know the degree and genus $C$, then we know the Hilbert polynomial of the curve is $HP_{S/I_C}(n)=dn+1-g$.  Moreover,by the Gruson-Lazarsfeld-Peskine theorem, $\mbox{reg}(S/I_C)\le \deg(C)-\mbox{codim}(C)$.  Hence $\mbox{dim}(S/I_C)_n=dn+1-g$ for $n\ge d-2$.  Moreover, if $S/I_C$ is Cohen-Macaulay, $\mbox{dim}(S/I_C)_n=dn+1-g$ for $n\ge d-3$.
-
-Let $n\ge d-2$ (or $n\ge d-3$ if $S/I_C$ is Cohen-Macaulay) and assume that $|A|\le \binom{n+3}{3}$.  Since we have the coordinates of the points in $A$, we also have access to the ideal $I_A$ of the set of points.  Let $e=\dim (I_C)_n=\binom{n+3}{3}-dn+g-1$ and $s=\dim(I_A)_n=\binom{n+3}{3}-|A|$ (which follows since $A$ is in general position).  The idea of the Jacobian algorithm is to scan all $e$-dimensional subspaces of $(I_A)_n$ to see if any locally cut out a 1-dimensional variety at each of the points of $A$.  If not, then there is no integral curve C of degree $d$ and genus $g$ that contains $A$. 
