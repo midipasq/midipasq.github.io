@@ -1,0 +1,38 @@
+from sage.all import *
+
+#Calculates the skew waldschmidt constant with respect to a 0/1 vector only (this is all that is needed for matroids)
+def skew_waldschmidt_facet(M,direction=None,cocircs=None):
+    #if many calculations are going to be performed for the same matroid, pre-compute the circuits and feed them in
+    if cocircs == None:
+        cocircs = M.cocircuits()
+    #Set up the linear program
+    p_lp = MixedIntegerLinearProgram(maximization=False, solver='GLPK')
+    a = p_lp.new_variable(nonnegative=True)
+    groundset = list(M.groundset())
+    edge_to_idx = {e: i for i, e in enumerate(groundset)}
+    #If no direction is given, compute the Waldschmidt constant
+    if direction == None:
+        direction = range(len(groundset))
+    p_lp.set_objective(sum(a[i] for i in direction))
+    #The symbolic polyhedron of the facet ideal of a matroid is defined by sums over cocircuits being at least one
+    for C in cocircs:
+        p_lp.add_constraint(sum(a[edge_to_idx[e]] for e in C) >= 1)
+    w_val = p_lp.solve()
+    return(w_val)
+
+#To compute the asymptotic resurgence, minimize the functionals defining the Newton polyhedron (given by complements of flats)
+#over the symbolic polyhedron (defined by cocircuits of M)
+def asymptotic_resurgence_facet(M):
+    r = rank(M)
+    E = M.groundset()
+    CC=M.cocircuits()
+    winner = (1,[])
+    for i in range(0,r):
+        F=M.flats(i)
+        for f in F:
+            v = [i for i,e in enumerate(E) if not e in list(f)]
+            sw = skew_waldschmidt_facet(M,direction=v,cocircs=CC)
+            lb = (r-i)/sw
+            if lb>winner[0]:
+                winner = (lb,f)
+    return(winner)

@@ -1,0 +1,97 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>SageMathCell</title>
+    <script src="https://sagecell.sagemath.org/static/embedded_sagecell.js"></script>
+    <script>
+    // Make the div with id 'mycell' a Sage cell
+    sagecell.makeSagecell({inputLocation:  'div.hide',
+                           hide: ['editor'],
+                           evalButtonText: 'Evaluate',
+			   linked: true,
+			   linkKey: "linkcell"});
+    // Make *any* div with class 'compute' a Sage cell
+    sagecell.makeSagecell({inputLocation: 'div.compute',
+                           evalButtonText: 'Evaluate',
+			   linked: true,
+			   linkKey: "linkcell"});
+    </script>
+  </head>
+  <body>
+    <h1>Asymptotic Resurgence of facet ideals of matroids in Sage</h1>
+
+    <h2>Load functions to compute skew Waldschmidt constant and asymptotic resurgence</h2>Click the "Evaluate" button below to define the functions in the file <a href="Asymptotic_Resurgence_Facet_Ideal_Of_Matroid"> Asymptotic resurgence of facet ideal of matroid  </a>.
+
+<div class="hide"><script type="text/x-sage">
+from sage.all import *
+
+#Calculates the skew waldschmidt constant with respect to a 0/1 vector only (this is all that is needed for matroids)
+def skew_waldschmidt_facet(M,direction=None,cocircs=None):
+    #if many calculations are going to be performed for the same matroid, pre-compute the circuits and feed them in
+    if cocircs == None:
+        cocircs = M.cocircuits()
+    #Set up the linear program
+    p_lp = MixedIntegerLinearProgram(maximization=False, solver='GLPK')
+    a = p_lp.new_variable(nonnegative=True)
+    groundset = list(M.groundset())
+    edge_to_idx = {e: i for i, e in enumerate(groundset)}
+    #If no direction is given, compute the Waldschmidt constant
+    if direction == None:
+        direction = range(len(groundset))
+    p_lp.set_objective(sum(a[i] for i in direction))
+    #The symbolic polyhedron of the facet ideal of a matroid is defined by sums over cocircuits being at least one
+    for C in cocircs:
+        p_lp.add_constraint(sum(a[edge_to_idx[e]] for e in C) >= 1)
+    w_val = p_lp.solve()
+    return(w_val)
+
+#To compute the asymptotic resurgence, minimize the functionals defining the Newton polyhedron (given by complements of flats)
+#over the symbolic polyhedron (defined by cocircuits of M)
+def asymptotic_resurgence_facet(M):
+    r = rank(M)
+    E = M.groundset()
+    CC=M.cocircuits()
+    winner = (1,[])
+    for i in range(0,r):
+        F=M.flats(i)
+        for f in F:
+            v = [i for i,e in enumerate(E) if not e in list(f)]
+            sw = skew_waldschmidt_facet(M,direction=v,cocircs=CC)
+            lb = (r-i)/sw
+            if lb>winner[0]:
+                winner = (lb,f)
+    return(winner)
+
+#Print that the functions have loaded successfully
+print("Successfully loaded functions from Asymptotic resurgence of facet ideal of matroid")
+
+</script>
+</div>
+
+<h2>Uniform matroids</h2>
+
+It is well-known that the Waldschmidt constant of the facet ideal of the uniform matroid \(U_{k,n}\) of rank \(k\) on \(n\) elements is \(\frac{n}{n-k+1}\) and its asymptotic resurgence is \(\frac{k(n-k+1)}{n}\).
+
+<div class="compute"><script type="text/x-sage">
+U36=Uniform(3,6)
+print(skew_waldschmidt_facet(U36)) #should be 6/4
+print(asymptotic_resurgence_facet(U36)) #should be 2
+</script>
+</div>
+
+<div class="compute"><script type="text/x-sage">
+ 
+</script>
+</div>
+
+<div class="compute"><script type="text/x-sage">
+ 
+</script>
+</div>
+
+<div class="compute"><script type="text/x-sage">
+ 
+</script>
+</div>

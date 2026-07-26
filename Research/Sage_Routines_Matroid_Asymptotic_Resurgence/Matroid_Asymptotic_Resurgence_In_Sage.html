@@ -1,0 +1,131 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>SageMathCell</title>
+    <script src="https://sagecell.sagemath.org/static/embedded_sagecell.js"></script>
+    <script>
+    // Make the div with id 'mycell' a Sage cell
+    sagecell.makeSagecell({inputLocation:  'div.hide',
+                           hide: ['editor'],
+                           evalButtonText: 'Evaluate',
+			   linked: true,
+			   linkKey: "linkcell"});
+    // Make *any* div with class 'compute' a Sage cell
+    sagecell.makeSagecell({inputLocation: 'div.compute',
+                           evalButtonText: 'Evaluate',
+			   linked: true,
+			   linkKey: "linkcell"});
+    </script>
+  </head>
+  <body>
+    <h1>Asymptotic Resurgence of facet ideals of matroids in Sage</h1>
+
+    <h2>Load functions to compute skew Waldschmidt constant and asymptotic resurgence</h2>Click the "Evaluate" button below to define the functions in the file <a href="Asymptotic_Resurgence_Facet_Ideal_Of_Matroid"> Asymptotic resurgence of facet ideal of matroid  </a>.
+
+<div class="hide"><script type="text/x-sage">
+from sage.all import *
+
+#Calculates the skew waldschmidt constant with respect to a 0/1 vector only (this is all that is needed for matroids)
+def skew_waldschmidt_facet(M,direction=None,cocircs=None):
+    #if many calculations are going to be performed for the same matroid, pre-compute the circuits and feed them in
+    if cocircs == None:
+        cocircs = M.cocircuits()
+    #Set up the linear program
+    p_lp = MixedIntegerLinearProgram(maximization=False, solver='GLPK')
+    a = p_lp.new_variable(nonnegative=True)
+    groundset = list(M.groundset())
+    edge_to_idx = {e: i for i, e in enumerate(groundset)}
+    #If no direction is given, compute the Waldschmidt constant
+    if direction == None:
+        direction = range(len(groundset))
+    p_lp.set_objective(sum(a[i] for i in direction))
+    #The symbolic polyhedron of the facet ideal of a matroid is defined by sums over cocircuits being at least one
+    for C in cocircs:
+        p_lp.add_constraint(sum(a[edge_to_idx[e]] for e in C) >= 1)
+    w_val = p_lp.solve()
+    return(w_val)
+
+#To compute the asymptotic resurgence, minimize the functionals defining the Newton polyhedron (given by complements of flats)
+#over the symbolic polyhedron (defined by cocircuits of M)
+def asymptotic_resurgence_facet(M):
+    r = rank(M)
+    E = M.groundset()
+    CC=M.cocircuits()
+    winner = (1,[])
+    for i in range(0,r):
+        F=M.flats(i)
+        for f in F:
+            v = [i for i,e in enumerate(E) if not e in list(f)]
+            sw = skew_waldschmidt_facet(M,direction=v,cocircs=CC)
+            lb = (r-i)/sw
+            if lb>winner[0]:
+                winner = (lb,f)
+    return(winner)
+
+#Print that the functions have loaded successfully
+print("Successfully loaded functions from Asymptotic resurgence of facet ideal of matroid")
+
+</script>
+</div>
+
+<h2>Uniform matroids</h2>
+
+It is well-known that the Waldschmidt constant of the facet ideal of the uniform matroid \(U_{k,n}\) of rank \(k\) on \(n\) elements is \(\frac{n}{n-k+1}\) and its asymptotic resurgence is \(\frac{k(n-k+1)}{n}\).
+
+<br>
+
+<div class="compute"><script type="text/x-sage">
+U36=matroids.Uniform(3,6)
+print(skew_waldschmidt_facet(U36)) #should be 6/4
+print(asymptotic_resurgence_facet(U36)) #should be 2, achieved at the empty flat (i.e. it is given by the rank of the matroid divided by the Waldschmidt constant)
+</script>
+</div>
+
+<h2> Almost uniform matroids </h2>
+An almost uniform matroid \(U_{k,n}^-\) of rank \(k\) on a groundset of size \(n\) is a matroid whose bases are all the bases of the uniform matroid \(U_{k,n}\) except for one.  We prove in <a href="https://arxiv.org/abs/2607.20892"> Asymptotic Resurgence of facet and Stanley-Reisner ideals of matroids </a> that the Waldschmidt constant of the facet ideal of \(U_{k,n}^-\) is \(\frac{n-1}{n-k}\) if \(2k\le n+1\) and \(\frac{n+1}{n-k+1}\) if \(2k\ge n+1\).  Similarly, the asymptotic resurgence of the facet ideal of \(U_{k,n}^-\) is \(\frac{k(n-k)}{n-1}\) if \(2k\le n+1\) and \(\frac{(k-1)(n-k+1)}{n-1}\) if \(2k\ge n+1\).
+
+<div class="compute"><script type="text/x-sage">
+#Define an almost uniform matroid of rank 3 on 6 elements
+AU36 = Matroid("abcdef", "*******************0", rank=3);
+#has all bases of uniform matroid of rank 3 on 'abcdef' except 'cdef'
+for B in AU36.bases():
+    print(B)
+</script>
+</div>
+
+The asymptotic resurgence is achieved in the direction of the complement of the empty flat.  That is, it is given by the rank of the matroid divided by the Waldschmidt constant.
+
+<div class="compute"><script type="text/x-sage">
+print(skew_waldschmidt_facet(AU36)) #should be 5/3
+print(asymptotic_resurgence_facet(AU36)) #should be 9/5, achieved at the empty flat (i.e. achieved in the direction of the all ones vector)    
+</script>
+</div>
+
+<div class="compute"><script type="text/x-sage">
+#Define an almost uniform matroid of rank 4 on 6 elements
+AU46 = Matroid("abcdef", "**************0", rank=4); 
+#has all bases of uniform matroid of rank 4 on 'abcdef' except 'cdef'
+for B in AU46.bases():
+    print(B)
+</script>
+</div>
+
+The asymptotic resurgence is achieved in the direction of the complement of a flat whose complement contains the missing basis 'cdef'.
+
+<div class="compute"><script type="text/x-sage">
+print(skew_waldschmidt_facet(AU46)) #should be 7/3
+print(asymptotic_resurgence_facet(AU46)) #should be 9/5, achieved at the flat 'a' whose complement contains the missing basis 'cdef'
+</script>
+</div>
+
+<h2> Checking asymptotic resurgence for all non-isomorphic  matroids of small rank </h2>
+We can verify the data in Table 1 of <a href="https://arxiv.org/abs/2607.20892"> Asymptotic Resurgence of facet and Stanley-Reisner ideals of matroids </a> with variations on the following code (this has to be run on a local sage installation, as the matroids database is not loaded in the online version).  For instance, the following code will verify that three of the four non-isomorphic simple matroids of rank 3 on 5 elements have facet ideals whose asymptotic resurgence is given by the rank divided by the Waldshmidt constant.
+
+<div class="compute"><script type="text/x-sage">
+L = [M for M in matroids.AllMatroids(5, 3, type ='simple')]
+print([(asymptotic_resurgence_facet(M))[0] for M in L])
+[3/(skew_waldschmidt_facet(M)) for M in L]
+</script>
+</div>

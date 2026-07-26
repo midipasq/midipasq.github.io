@@ -1,0 +1,311 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>SageMathCell</title>
+    <script src="https://sagecell.sagemath.org/static/embedded_sagecell.js"></script>
+    <script>
+    // Make the div with id 'mycell' a Sage cell
+    sagecell.makeSagecell({inputLocation:  'div.hide',
+                           hide: ['editor'],
+                           evalButtonText: 'Evaluate',
+			   linked: true,
+			   linkKey: "linkcell"});
+    // Make *any* div with class 'compute' a Sage cell
+    sagecell.makeSagecell({inputLocation: 'div.compute',
+                           evalButtonText: 'Evaluate',
+			   linked: true,
+			   linkKey: "linkcell"});
+    </script>
+  </head>
+  <body>
+    <h1>Asymptotic Resurgence of facet ideals of graphic matroids in Sage</h1>
+
+    <h2>Load functions to compute skew Waldschmidt constant and asymptotic resurgence</h2>Click the "Evaluate" button below to define the functions in the file <a href="Asymptotic_Resurgence_Facet_Ideal_Of_Matroid"> Asymptotic resurgence of facet ideal of matroid  </a>.
+
+<div class="hide"><script type="text/x-sage">
+from sage.all import *
+
+#Calculates the skew waldschmidt constant with respect to a 0/1 vector only (this is all that is needed for matroids)
+def skew_waldschmidt_facet(M,direction=None,cocircs=None):
+    #if many calculations are going to be performed for the same matroid, pre-compute the circuits and feed them in
+    if cocircs == None:
+        cocircs = M.cocircuits()
+    #Set up the linear program
+    p_lp = MixedIntegerLinearProgram(maximization=False, solver='GLPK')
+    a = p_lp.new_variable(nonnegative=True)
+    groundset = list(M.groundset())
+    edge_to_idx = {e: i for i, e in enumerate(groundset)}
+    #If no direction is given, compute the Waldschmidt constant
+    if direction == None:
+        direction = range(len(groundset))
+    p_lp.set_objective(sum(a[i] for i in direction))
+    #The symbolic polyhedron of the facet ideal of a matroid is defined by sums over cocircuits being at least one
+    for C in cocircs:
+        p_lp.add_constraint(sum(a[edge_to_idx[e]] for e in C) >= 1)
+    w_val = p_lp.solve()
+    return(w_val)
+
+#To compute the asymptotic resurgence, minimize the functionals defining the Newton polyhedron (given by complements of flats)
+#over the symbolic polyhedron (defined by cocircuits of M)
+def asymptotic_resurgence_facet(M):
+    r = rank(M)
+    E = M.groundset()
+    CC=M.cocircuits()
+    winner = (1,[])
+    for i in range(0,r):
+        F=M.flats(i)
+        for f in F:
+            v = [i for i,e in enumerate(E) if not e in list(f)]
+            sw = skew_waldschmidt_facet(M,direction=v,cocircs=CC)
+            lb = (r-i)/sw
+            if lb>winner[0]:
+                winner = (lb,f)
+    return(winner)
+
+#Print that the functions have loaded successfully
+print("Successfully loaded functions from Asymptotic resurgence of facet ideal of matroid")
+
+</script>
+</div>
+
+<h2> A non-Hamiltonian outlier </h2>
+
+The following graph is Example 6.1 in "Asymptotic resurgence of facet ideals of graphic matroids." It is the uniqe minimal non-Hamiltonian graph on nine vertices so that the asymptotic resurgence of its facet ideal achieves the upper bound of \(2-2/9\), \(9\) being the number of vertices.
+
+<div class="compute"><script type="text/x-sage">
+d={0:[1,2,3],1:[0,2,5],2:[0,1,4],3:[0,6],4:[2,8],5:[1,7],6:[3,7,8],7:[5,6,8],8:[4,6,7]}
+G=Graph(d)
+G
+</script>
+</div>
+
+We verify that the asymptotic resurgence of the facet ideal of the graphic matroid of \(G\) is \(2-2/9\).
+
+<div class="compute"><script type="text/x-sage">
+M=Matroid(G)
+asymptotic_resurgence_facet(M)
+</script>
+</div>
+
+
+<h2> Petersen Graph </h2>
+
+The Petersen graph is non-Hamiltonian, but it is a regular graph.  By Theorem 5.5 in "Asymptotic resurgence of facet ideals of graphic matroids", the asymptotic resurgence of the facet ideal of the graphic matroid of the Petersen graph is \(2-\frac{2}{10}\).
+
+<div class="compute"><script type="text/x-sage">
+G=graphs.PetersenGraph()
+G    
+</script>
+</div>
+
+The following computation will probably time out the online Sage server.
+
+<div class="compute"><script type="text/x-sage">
+M=Matroid(G)
+asymptotic_resurgence_facet(M) #Most likely this will not finish on the on-line server, and will need to be run on a local installation.
+</script>
+</div>
+
+<h2> A three-regular graph with edge connectivity two </h2>
+
+The following graph is Example 6.5 in "Asymptotic resurgence of facet ideals of graphic matroids."
+
+<div class="compute"><script type="text/x-sage">
+d={0:[1,2,3],1:[0,4,5],2:[0,6,7],3:[0,8,9],4:[1,5,10],5:[1,4,10],6:[2,7,11],7:[2,6,11],8:[3,9,12],9:[3,8,12],10:[4,5,13],11:[6,7,13],12:[8,9,13],13:[10,11,12]}
+G=Graph(d)
+</script>
+</div>
+
+The computation of the asymptotic resurgence of the facet ideal of the graphic matroid of \(G\) is 9/5, verifying the claim in Example 6.5.  The following code computes this number, but it will likely time out the online Sage server.
+
+<div class="compute"><script type="text/x-sage">
+M=Matroid(G)
+asymptotic_resurgence_facet(M) #Most likely this will not finish on the on-line server, and will need to be run on a local installation.
+</script>
+</div>
+
+<h2> The asymptotic resurgence of non-Hamiltonian graphs </h2>
+If \(G\) is a Hamiltonian graph on \(n\) vertices, then Theorem 5.5 in "Asymptotic resurgence of facet ideals of graphic matroids" shows that the asymptotic resurgence of the facet ideal of the graphic matroid of \(G\) is \(2-2/n\).  If \(G\) is not Hamiltonian, then it follows from Theorem 4.6 and Theorem 5.5 of the same paper that
+$$
+2-\frac{2}{c}\le \widehat{\rho}(I(M(G)))\le 2-\frac{2}{n},
+$$
+where \(c\) is the circumference of \(G\) and \(n\) is the number of vertices of \(G\).  In Question 7.2 we ask if the asymptotic resurgence always achieves one of the bounds above, and we verified that this is indeed the case for graphs on up to nine vertices.  Here we illustrate the code to run successively for \(n=1,\ldots,9\) to verify this.
+
+We rely on Theorem 2.5 of "Asymptotic resurgence of facet ideals of graphic matroids", which states that
+$$
+\widehat{\rho}(I(M))=\max\left\lbrace \frac{\text{rank}(M)}{\widehat{\alpha}(I(M))}, \widehat{\rho}_{c,1}(I(M))\right\rbrace,
+$$
+where
+$$
+\widehat{\rho}_{c,1}(I(M))=\max_{F\in \mathcal{L}_1(M)\setminus \{E\}}\{\widehat{\rho}(I(M/F))
+$$
+and \(\mathcal{L}_1(M)\) is the set of rank one flats of \(M\).  Now suppose we know that every simple \(2\)-connected graph \(H\) on at most \(n\) vertices satisfies
+$$
+\widehat{\rho}(I(M(H)))=2-\frac{2}{c(H)},
+$$
+where \(c(H)\) is the circumference of \(H\).  If \(G\) is a graph on \(n+1\) vertices and \(G\) is Hamiltonian, then the asymptotic resurgence of the facet ideal of the matroid of \(G\) is \(2-2/(n+1)=2-2/c\), where \(c\) is the circumference of \(G\), by Theorem 5.5.  Now suppose \(G\) is not Hamiltonian. The rank one flats of the matroid of \(G\) correspond to edges and its contractions along rank one flats yield simple (although not necessarily \(2\)-connected) graphs on \(n\) vertices (once simplified - which preserves the asymptotic resurgence by Theorem 3.2).  Since the asymptotic resurgence of the facet ideal of a matroid is the maximum of the asymptotic resurgences of the facet ideals of its connected components (Theorem 3.3), we have that \(\widehat{\rho}_{c,1}(I(M))=2-\frac{2}{c_m}\), where \(c_m\) is the maximum circumference of a contraction of \(G\).  Since \(G\) is not Hamiltonian, there is an edge whose contraction retains the circumference of \(G\), so \(c_m=c(G)\).  Thus, by Theorem 2.5, we have
+$$
+\widehat{\rho}(I(M(G)))=\max\left\lbrace \frac{\text{rank}(M(G))}{\widehat{\alpha}(I(M(G)))}, 2-\frac{2}{c(G)}\right\rbrace=\max\left\lbrace \frac{n}{\widehat{\alpha}(I(M(G)))}, 2-\frac{2}{c(G)}\right\rbrace
+$$
+We can use this observation to inductively verify that, for every simple 2-connected graph \(G\) on \(n\) vertices, where \(n\le 8\),
+$$
+\widehat{\rho}(I(M(G)))=2-\frac{2}{c(G)}.
+$$
+Furthermore, there are only four non-Hamiltonian simple graphs on nine vertices that satisfy
+$$
+\widehat{\rho}(I(M(G)))=2-\frac{2}{9}.
+$$
+
+A simple graph on three vertices with at least one edge is either a tree, in which case \(I(M(G))\) is principal with \(\widehat{\rho}(I(M(G)))=1\), or a (Hamiltonian) three-cycle, in which case \(\widehat{\rho}(I(M(G)))=2-2/3=4/3\).  So we begin the inductive computation at four vertices.
+
+<div class="compute"><script type="text/x-sage">
+#Verify for graphs on four vertices
+n=4;
+SimpleGraphs=[G for G in graphs(n)]; #get a list of all simple graphs on n vertices
+TwoConnectedSimpleGraphs=[G for G in SimpleGraphs if G.is_biconnected()]; #restrict to 2-connected graphs
+NonHamiltonian2ConnectedSimpleGraphs=[G for G in TwoConnectedSimpleGraphs if len(G.longest_cycle())<n]
+NonHamiltonian2ConnectedSimpleGraphs
+</script>
+</div>
+
+Since there are no two-connected simple graphs on four vertices that are not Hamiltonian, \(\widehat{\rho}(I(M(G)))=2-\frac{2}{c(G)}\) for every such graph \(G\).  
+
+<div class="compute"><script type="text/x-sage">
+#Get non-Hamiltonian simple two-connected graphs on five vertices
+n=5;
+SimpleGraphs=[G for G in graphs(n)]; #get a list of all simple graphs on n vertices
+TwoConnectedSimpleGraphs=[G for G in SimpleGraphs if G.is_biconnected()]; #restrict to 2-connected graphs
+NonHamiltonian2ConnectedSimpleGraphs=[G for G in TwoConnectedSimpleGraphs if len(G.longest_cycle())<n]
+len(NonHamiltonian2ConnectedSimpleGraphs)
+</script>
+</div>
+
+There are only two non-Hamiltonian two-connected simple graphs on five vertices.  We verify that \(4/\widehat{\alpha}(I(M(G)))\le 2-\frac{2}{c(G)}\) and thus \(\widehat{\rho}(I(M(G)))=2-\frac{2}{c(G)}\) for each of these.
+
+<div class="compute"><script type="text/x-sage">
+#Verify that there are no graphs G on five vertices whose asymptotic resurgence exceeds 2-2/c(G)
+Outliers = [];
+    
+for G in NonHamiltonian2ConnectedSimpleGraphs:
+    M = Matroid(G)
+    c = len(G.longest_cycle())
+    alph = skew_waldschmidt_facet(M)
+    if (n-1)/alph>2-2/c:
+        Outliers = Outliers+[G]
+
+Outliers
+</script>
+</div>
+
+<div class="compute"><script type="text/x-sage">
+#Verify for graphs on six vertices
+n=6;
+SimpleGraphs=[G for G in graphs(n)]; #get a list of all simple graphs on n vertices
+TwoConnectedSimpleGraphs=[G for G in SimpleGraphs if G.is_biconnected()]; #restrict to 2-connected graphs
+NonHamiltonian2ConnectedSimpleGraphs=[G for G in TwoConnectedSimpleGraphs if len(G.longest_cycle())<n]
+len(NonHamiltonian2ConnectedSimpleGraphs)
+</script>
+</div>
+
+There are eight non-Hamiltonian two-connected simple graphs on six vertices.  We verify that \(5/\widehat{\alpha}(I(M(G)))\le 2-\frac{2}{c(G)}\) and thus \(\widehat{\rho}(I(M(G)))=2-\frac{2}{c(G)}\) for each of these.
+
+<div class="compute"><script type="text/x-sage">
+#Verify that there are no graphs G on six vertices whose asymptotic resurgence exceeds 2-2/c(G)
+Outliers = [];
+    
+for G in NonHamiltonian2ConnectedSimpleGraphs:
+    M = Matroid(G)
+    c = len(G.longest_cycle())
+    alph = skew_waldschmidt_facet(M)
+    if (n-1)/alph>2-2/c:
+        Outliers = Outliers+[G]
+
+Outliers
+</script>
+</div>
+
+<div class="compute"><script type="text/x-sage">
+#Verify for graphs on seven vertices
+n=7;
+SimpleGraphs=[G for G in graphs(n)]; #get a list of all simple graphs on n vertices
+TwoConnectedSimpleGraphs=[G for G in SimpleGraphs if G.is_biconnected()]; #restrict to 2-connected graphs
+NonHamiltonian2ConnectedSimpleGraphs=[G for G in TwoConnectedSimpleGraphs if len(G.longest_cycle())<n]
+len(NonHamiltonian2ConnectedSimpleGraphs)
+</script>
+</div>
+
+There are 85 non-Hamiltonian two-connected simple graphs on seven vertices.  We verify that \(6/\widehat{\alpha}(I(M(G)))\le 2-\frac{2}{c(G)}\) and thus \(\widehat{\rho}(I(M(G)))=2-\frac{2}{c(G)}\) for each of these.
+
+<div class="compute"><script type="text/x-sage">
+#Verify that there are no graphs G on seven vertices whose asymptotic resurgence exceeds 2-2/c(G)
+Outliers = [];
+    
+for G in NonHamiltonian2ConnectedSimpleGraphs:
+    M = Matroid(G)
+    c = len(G.longest_cycle())
+    alph = skew_waldschmidt_facet(M)
+    if (n-1)/alph>2-2/c:
+        Outliers = Outliers+[G]
+
+Outliers
+</script>
+</div>
+
+<div class="compute"><script type="text/x-sage">
+#Verify for graphs on eight vertices
+n=8;
+SimpleGraphs=[G for G in graphs(n)]; #get a list of all simple graphs on n vertices
+TwoConnectedSimpleGraphs=[G for G in SimpleGraphs if G.is_biconnected()]; #restrict to 2-connected graphs
+NonHamiltonian2ConnectedSimpleGraphs=[G for G in TwoConnectedSimpleGraphs if len(G.longest_cycle())<n]
+len(NonHamiltonian2ConnectedSimpleGraphs)
+</script>
+</div>
+
+There are 927 non-Hamiltonian two-connected simple graphs on eight vertices.  We verify that \(7/\widehat{\alpha}(I(M(G)))\le 2-\frac{2}{c(G)}\) and thus \(\widehat{\rho}(I(M(G)))=2-\frac{2}{c(G)}\) for each of these.
+
+<div class="compute"><script type="text/x-sage">
+#Verify that there are no graphs G on eight vertices whose asymptotic resurgence exceeds 2-2/c(G)
+#Most likely this will not finish on the on-line server, and will need to be run on a local installation.
+Outliers = [];
+    
+for G in NonHamiltonian2ConnectedSimpleGraphs:
+    M = Matroid(G)
+    c = len(G.longest_cycle())
+    alph = skew_waldschmidt_facet(M)
+    if (n-1)/alph>2-2/c:
+        Outliers = Outliers+[G]
+
+Outliers
+</script>
+</div>
+
+<div class="compute"><script type="text/x-sage">
+#Verify for graphs on nine vertices
+#Most likely this will not finish on the on-line server, and will need to be run on a local installation.    
+n=9;
+SimpleGraphs=[G for G in graphs(n)]; #get a list of all simple graphs on n vertices
+TwoConnectedSimpleGraphs=[G for G in SimpleGraphs if G.is_biconnected()]; #restrict to 2-connected graphs
+NonHamiltonian2ConnectedSimpleGraphs=[G for G in TwoConnectedSimpleGraphs if len(G.longest_cycle())<n]
+len(NonHamiltonian2ConnectedSimpleGraphs)
+</script>
+</div>
+
+There are 16983 non-Hamiltonian two-connected simple graphs on nine vertices.  We verify that \(8/\widehat{\alpha}(I(M(G)))\le 2-\frac{2}{c(G)}\) for all but four of these.
+
+<div class="compute"><script type="text/x-sage">
+#Verify that there are only four graphs G on eight vertices whose asymptotic resurgence exceeds 2-2/c(G)
+#Most likely this will not finish on the on-line server, and will need to be run on a local installation.
+Outliers = [];
+    
+for G in NonHamiltonian2ConnectedSimpleGraphs:
+    M = Matroid(G)
+    c = len(G.longest_cycle())
+    alph = skew_waldschmidt_facet(M)
+    if (n-1)/alph>2-2/c:
+        Outliers = Outliers+[G]
+
+Outliers
+</script>
+</div>
